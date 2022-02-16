@@ -1,0 +1,456 @@
+%  LaTeX support: latex@mdpi.com 
+%  For support, please attach all files needed for compiling as well as the log file, and specify your operating system, LaTeX version, and LaTeX editor.
+
+%=================================================================
+\documentclass[geosciences,article,submit,pdftex,moreauthors]{Definitions/mdpi} 
+
+\graphicspath{{figures/}} % path to folder with figures
+
+%=================================================================
+% MDPI internal commands
+\firstpage{1} 
+\makeatletter 
+\setcounter{page}{\@firstpage} 
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2022}
+\copyrightyear{2022}
+%\externaleditor{Academic Editor: Firstname Lastname}
+\datereceived{} 
+\dateaccepted{} 
+\datepublished{} 
+%\datecorrected{} % Corrected papers include a "Corrected: XXX" date in the original paper.
+%\dateretracted{} % Corrected papers include a "Retracted: XXX" date in the original paper.
+\hreflink{https://doi.org/} % If needed use \linebreak
+%\doinum{}
+%------------------------------------------------------------------
+% The following line should be uncommented if the LaTeX file is uploaded to arXiv.org
+%\pdfoutput=1
+
+%=================================================================
+% Add packages and commands here. The following packages are loaded in our class file: fontenc, inputenc, calc, indentfirst, fancyhdr, graphicx, epstopdf, lastpage, ifthen, lineno, float, amsmath, setspace, enumitem, mathpazo, booktabs, titlesec, etoolbox, tabto, xcolor, soul, multirow, microtype, tikz, totcount, changepage, attrib, upgreek, cleveref, amsthm, hyphenat, natbib, hyperref, footmisc, url, geometry, newfloat, caption
+
+%=================================================================
+%% Please use the following mathematics environments: Theorem, Lemma, Corollary, Proposition, Characterization, Property, Problem, Example, ExamplesandDefinitions, Hypothesis, Remark, Definition, Notation, Assumption
+%% For proofs, please use the proof environment (the amsthm package is loaded by the MDPI class).
+
+%=================================================================
+% Full title of the paper (Capitalized)
+\Title{Mapping Mongolia using TerraClimate dataset for estimating interacting roles of topography, environmental parameters and climate setting at a national scale}
+
+% MDPI internal command: Title for citation in the left column
+\TitleCitation{Mapping Mongolia using TerraClimate dataset for estimating interacting roles of topography, environmental parameters and climate setting at a national scale}
+
+% Author Orchid ID: enter ID or remove command
+\newcommand{\orcidauthorA}{0000-0002-5759-1089} % Add \orcidA{} behind the author's name
+%\newcommand{\orcidauthorB}{0000-0000-0000-000X} % Add \orcidB{} behind the author's name
+
+% Authors, for the paper (add full first names)
+\Author{Polina Lemenkova $^{1}$\orcidA{}}
+
+%\longauthorlist{yes}
+
+% MDPI internal command: Authors, for metadata in PDF
+\AuthorNames{Polina Lemenkova}
+
+% MDPI internal command: Authors, for citation in the left column
+\AuthorCitation{Lemenkova, P.}
+% If this is a Chicago style journal: Lastname, Firstname, Firstname Lastname, and Firstname Lastname.
+
+% Affiliations / Addresses (Add [1] after \address if there is only one affiliation.)
+\address{%
+$^{1}$ \quad Université Libre de Bruxelles, École polytechnique de Bruxelles (EPB, Brussels Faculty of Engineering), Laboratory of Image Synthesis and Analysis, Building L, Campus de Solbosch CP131/3, Avenue Franklin D. Roosevelt 50, B-1050, Brussels, Belgium; polina.lemenkova@ulb.be or pauline.lemenkova@gmail.com}
+
+% Contact information of the corresponding author
+\corres{Correspondence: polina.lemenkova@ulb.be; Tel.: +32471860459 (P.L.)}
+
+% Abstract (Do not insert blank lines, i.e. \\) 
+\abstract{This paper explores spatial variability of the ten climatic variables of Mongolia in 2019: average minimal and maximal temperatures, wind speed, soil moisture, downward surface shortwave radiation (DSRAD), snow water equivalent (SWE), vapor pressure deficit, vapor pressure anomaly, monthly precipitation and Palmer Drought Severity Index (PDSI). The PDSI demonstrates the simplified soil water balance estimating relative soil moisture conditions in Mongolia. This research presents mapping of the climate datasets derived from TerraClimate open source repository of the meteorological and climate measurements in NetCDF format. The methodology presented the compiled observations of Mongolia visualized by machine learning approach using Generic Mapping Tools (GMT) cartographic scripting toolset. The results present 10 new maps of climate data over Mongolia made using automated cartographic techniques of GMT. Spatial environmental and climate analysis, which determines relative distribution of PDSI and temperature extremes, precipitation and soil moisture, wind speed and DSRAD shown maximum at 491 mm, the DSRAD shown minimum at 40.000 Wm-2, maximum at 113.000 Wm-2 in the Gobi Desert region, SWE (up to 491 mm), VAP and VPD compared with landmass parameters represent powerful cartographic tools to address complex regional climate and environmental issues in Mongolia, a country with contrasting topography, extreme climate conditions and unique environmental setting.}
+
+% Keywords
+\keyword{Mongolia, Asia, climate, environment, cartography, GMT} 
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+Climate has long been recognized to play an important role in the Earth’s environmental dynamics [1], functionality [2, 3], variability and sustainability [4, 5] which has been a subject of numerous studies. This especially concerns Mongolia, a country with extreme continental climate, severe colds winters and dry summers, notable for hot temperatures. Climatic variables, such as variations in temperature, frequency and intensity of precipitation, direction and strength of winds have strong effects on the environmental setting of the country correlating with major distribution of the eco-zones and topographic relief.
+
+As a result, climate variability influences affects various aspects of vegetation coverage: agricultural potential and crop production [6, 7, 8], distribution and health conditions of forests [9]. Besides, climate has effects on social factors, such as tourism potential which includes nomadic tourism, distribution of nature attractions, such as national parks and reserves, aesthetics, quality and suitability of the landscapes for visiting [10, 11]. Another important point of influence for the climate effects is urbanization which is reflected in the distribution and density of population in Mongolia which naturally depend of the basic human conditions for living [12, 13, 14]. Temperature variability, precipitation and winds are factors essential in the soil moisture and quality [15], vegetation growth and health [16, 17], and the environmental sustainability [18, 19]. 
+
+At the same time, the two most important climate factors (temperature and precipitation) are largely influenced by the distributions of the relief landforms and local topography of the region with notable differences of the temperature regime and precipitation patterns in mountains, plateau, steppes and deserts. In turn, key exogenous surface processes such as weathering and erosion, especially active in desert areas and regions with strong winds and hydrological network largely control regional topography by sculpturing and modifying new landforms. Grazing intensity and active cattle heading can contribute to the environmental pressure and may cause degradation of rangelands in the mountain steppes of Mongolia [20, 21]. Modified ecosystems affect regional biodiversity and ecological productivity illustrating the cyclic process of the sensitivity of environment to climate reflected in the ecological significance [22, 23, 24]. The interconnectivity between the climate, environmental and social factors described above illustrates the effects of the climate cycle on ecological system in Mongolia that demonstrate mutual feedbacks between the geographic, climate and human aspects of life.
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_01.jpg}
+	\caption{Topographic map of Mongolia. Mapping: GMT. Source: author. \label{fig1}}
+\end{figure}   
+\unskip
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_02.jpg}
+	\caption{Average minimal temperature in Mongolia for 2019. Mapping: GMT. Source: author. \label{fig2}}
+\end{figure}   
+\unskip
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_03.jpg}
+	\caption{Average max. temperature in Mongolia for 04.2019. Mapping: GMT. Source: author. \label{fig3}}
+\end{figure}   
+\unskip
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_04.jpg}
+	\caption{Wind speed in Mongolia for 2019. Mapping: GMT. Source: author. \label{fig4}}
+\end{figure}   
+\unskip
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_05.jpg}
+	\caption{Soil moisture in Mongolia for 2019. Mapping: GMT. Source: author. \label{fig5}}
+\end{figure}   
+\unskip
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_06.jpg}
+	\caption{Downward surface shortwave radiation in Mongolia for 2019. Mapping: GMT. Source: author. \label{fig6}}
+\end{figure}   
+\unskip
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_07.jpg}
+	\caption{Snow water equivalent in Mongolia for 2019. Mapping: GMT. Source: author. \label{fig7}}
+\end{figure}   
+\unskip
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_08.jpg}
+	\caption{Vapor pressure deficit in Mongolia for 2019. Mapping: GMT. Source: author. \label{fig8}}
+\end{figure}   
+\unskip
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_09.jpg}
+	\caption{Vapor pressure anomaly in Mongolia for 2019. Mapping: GMT. Source: author. \label{fig9}}
+\end{figure}   
+\unskip
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_10.jpg}
+	\caption{Monthly precipitation in Mongolia for 2019. Mapping: GMT. Source: author. \label{fig10}}
+\end{figure}   
+\unskip
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_11.jpg}
+	\caption{Palmer Drought Severity Index (PDSI) in Mongolia for 2019. Mapping: GMT. Source: author. \label{fig11}}
+\end{figure}   
+\unskip
+
+This paper explores spatial variability of the ten climatic variables over the region of Mongolia in 2019 using TerraClimate dataset: average minimal and maximal temperatures, wind speed, soil moisture, downward surface shortwave radiation, snow water equivalent, vapor pressure deficit, vapor pressure anomaly, monthly precipitation and Palmer Drought Severity Index (PDSI) which demonstrates the simplified soil water balance estimating relative soil moisture conditions. This research presents a compilation of the climate datasets based on TerraClimate open source repository which records measurements of the meteorological and climate global data and stores them in NetCDF format. The methodology of this research first used the compiled data observations over Mongolia and visualized experimental meteorological data using the Generic Mapping Tools (GMT) cartographic scripting toolset [25] to map a series of the eleven new maps (10 climate maps and a topographic map) using scripting techniques [26, 27, 28]. The study illustrated that climate variability in various ecological zones of Mongolia are strongly affected by the topography of the country since they vary in high-mountain areas, deserts and semi-deserts, steppes, grasslands, taiga forests and alpine regions of the country. 
+
+The research evaluated the variations of different climate parameters described above over the topographic landforms of Mongolia, by comparing the presented maps and analyzing the distribution of the continuous fields of the climate variables over the study area. The paper then discussed the actuality and significance of the machine learning methods for cartographic visualization for climate datasets, explore implications of the scripting methods for serial mapping of the large datasets and provided a feedback on the GUI-based GIS techniques [29, 30] compared to the scripting methodology presented in this study. The study then suggested the correlation between the topographic and climate factors on the environmental sustainability of Mongolia as a country sensitive to the climate extreme and ecological variations affecting fragile ecosystems of this unique region that is driven by the global environmental and climate change. 
+
+Compared to the scripting mapping, there have been many studies published on traditional mapping using Graphical User Interface (GUI) based GIS mapping [31; 32; 33] which however, do not replace scripting mapping in terms of automatization, speed of data processing and aesthetic quality of mapping. At the same time, the variability and amount of data in the world requires fast and reliable machine-based techniques of data processing, modeling and visualization. This sets up a constant need to actualize, update and increase the quantity and quality of the existing maps of Mongolia using high-resolution thematic data and advanced cartographic approaches. This task requires advanced, machine-based effective cartographic methods with minimized handmade routine for speedy and comprehensive thematic environmental mapping. 
+
+Examples of the new methods of automatization in cartography can be illustrated by such open source scripting tools as GRASS GIS [34], GMT [35], R [36] or by the plugins of QGIS [37]. This article seeks to contribute to these attempts and continue methodological development of mapping by presenting a series of maps based on the TerraClimate datasets prepared using GMT scripting techniques. The TerraClimate data present regular updates of the global climate data in raster NetCDF format to the public. This study uses the data from the TerraClimate processed using GMT for visualization of Mongolia.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Materials and Methods}
+
+The topographic mapping (Fig. 1) was based on the General Bathymetric Chart of the Oceans  (GEBCO) grid [38] which aggregates the SRTM data for the terrestrial areas at 15 arc-second (ca. 450 m) resolution. Other maps (Fig. 2 to 11) were plotted using TerraClimate raster climate datasets in NetCDF format processed by GMT. The GMT module ‘grdcut’ was used to clip the region of Mongolia from the global grid using the following code: ‘gmt grdcut GEBCO\_2019.nc -R87.5/120/41.5/52.5 -Gmn\_relief.nc’ where the ‘-R’ flag controls the coordinates of the study area in WESN convention (87.5°–120° E, 41.5°–52.5°N). The application of module ‘psclip’ generates a selection of the study area using DCW contour of the country which was defined suing the code: ‘gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> \$ps’. The river hydrological network was visualized using the ‘pscoast’ module as follows: ‘gmt pscoast -R -J -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> \$ps’.  	
+
+The isolines on the maps of temperature (Fig. 2 and Fig. 3) were modeled using the ‘grdcontour’ module of GMT: 'gmt grdcontour mn\_tmin.nc -R -J -C2 -A2+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> \$ps'. Here the '-A' flag explains the annotations plotted for every 2nd line with ascertained transparency as reported in the existing works [39]. The texts were added by the 'pstext' module of GMT, e.g.: ‘gmt pstext -R -J -N -O -K -F+jTL+f9p,26,blue2+jLB -Gwhite@60 >> \$ps << EOF 92.3 50.1 Uvs Nuur EOF’ where the actually printed expression is defined between the coordinates in decimal system and the returned ‘EOF’ signal. The visualization was made using the 'makecpt' module: 'gmt makecpt -Cjet -T-43/-16/0.5 > pauline.cpt' and set up for 'jet' color table for the both figures (Fig. 2 and 3) for comparability. Here the ‘-43/-16/0.5’ flag provides the range of data and the step of the interval in color visualization.   
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results}
+
+This section may be divided by subheadings. It should provide a concise and precise description of the experimental results, their interpretation as well as the experimental conclusions that can be drawn.
+\subsection{Subsection}
+\subsubsection{Subsubsection}
+
+Bulleted lists look like this:
+\begin{itemize}
+\item	First bullet;
+\item	Second bullet;
+\item	Third bullet.
+\end{itemize}
+
+Numbered lists can be added as follows:
+\begin{enumerate}
+\item	First item; 
+\item	Second item;
+\item	Third item.
+\end{enumerate}
+
+The text continues here. 
+
+\subsection{Figures, Tables and Schemes}
+
+All figures and tables should be cited in the main text as Figure~\ref{fig1}, Table~\ref{tab1}, Table~\ref{tab2}, etc.
+
+\begin{figure}[H]
+\includegraphics[width=10.5 cm]{Definitions/logo-mdpi}
+\caption{This is a figure. Schemes follow the same formatting. If there are multiple panels, they should be listed as: (\textbf{a}) Description of what is contained in the first panel. (\textbf{b}) Description of what is contained in the second panel. Figures should be placed in the main text near to the first time they are cited. A caption on a single line should be centered.\label{fig1}}
+\end{figure}   
+\unskip
+
+\begin{table}[H] 
+\caption{This is a table caption. Tables should be placed in the main text near to the first time they are~cited.\label{tab1}}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\begin{tabularx}{\textwidth}{CCC}
+\toprule
+\textbf{Title 1}	& \textbf{Title 2}	& \textbf{Title 3}\\
+\midrule
+Entry 1		& Data			& Data\\
+Entry 2		& Data			& Data\\
+\bottomrule
+\end{tabularx}
+\end{table}
+\unskip
+
+\begin{table}[H]
+\caption{This is a wide table.\label{tab2}}
+	\begin{adjustwidth}{-\extralength}{0cm}
+		\newcolumntype{C}{>{\centering\arraybackslash}X}
+		\begin{tabularx}{\fulllength}{CCCC}
+			\toprule
+			\textbf{Title 1}	& \textbf{Title 2}	& \textbf{Title 3}     & \textbf{Title 4}\\
+			\midrule
+			Entry 1		& Data			& Data			& Data\\
+			Entry 2		& Data			& Data			& Data \textsuperscript{1}\\
+			\bottomrule
+		\end{tabularx}
+	\end{adjustwidth}
+	\noindent{\footnotesize{\textsuperscript{1} This is a table footnote.}}
+\end{table}
+
+%\begin{listing}[H]
+%\caption{Title of the listing}
+%\rule{\columnwidth}{1pt}
+%\raggedright Text of the listing. In font size footnotesize, small, or normalsize. Preferred format: left aligned and single spaced. Preferred border format: top border line and bottom border line.
+%\rule{\columnwidth}{1pt}
+%\end{listing}
+
+Text.
+
+Text.
+
+\subsection{Formatting of Mathematical Components}
+
+This is the example 1 of equation:
+\begin{linenomath}
+\begin{equation}
+a = 1,
+\end{equation}
+\end{linenomath}
+the text following an equation need not be a new paragraph. Please punctuate equations as regular text.
+%% If the documentclass option "submit" is chosen, please insert a blank line before and after any math environment (equation and eqnarray environments). This ensures correct linenumbering. The blank line should be removed when the documentclass option is changed to "accept" because the text following an equation should not be a new paragraph.
+
+This is the example 2 of equation:
+\begin{adjustwidth}{-\extralength}{0cm}
+\begin{equation}
+a = b + c + d + e + f + g + h + i + j + k + l + m + n + o + p + q + r + s + t + u + v + w + x + y + z
+\end{equation}
+\end{adjustwidth}
+
+% Example of a page in landscape format (with table and table footnote).
+%\startlandscape
+%\begin{table}[H] %% Table in wide page
+%\caption{This is a very wide table.\label{tab3}}
+%	\begin{tabularx}{\textwidth}{CCCC}
+%		\toprule
+%		\textbf{Title 1}	& \textbf{Title 2}	& \textbf{Title 3}	& \textbf{Title 4}\\
+%		\midrule
+%		Entry 1		& Data			& Data			& This cell has some longer content that runs over two lines.\\
+%		Entry 2		& Data			& Data			& Data\textsuperscript{1}\\
+%		\bottomrule
+%	\end{tabularx}
+%	\begin{adjustwidth}{+\extralength}{0cm}
+%		\noindent\footnotesize{\textsuperscript{1} This is a table footnote.}
+%	\end{adjustwidth}
+%\end{table}
+%\finishlandscape
+
+% Example of a figure that spans the whole page width. The same concept works for tables, too.
+\begin{figure}[H]
+\begin{adjustwidth}{-\extralength}{0cm}
+\centering
+\includegraphics[width=13.5cm]{Definitions/logo-mdpi}
+\end{adjustwidth}
+\caption{This is a wide figure.\label{fig2}}
+\end{figure}  
+
+Please punctuate equations as regular text. Theorem-type environments (including propositions, lemmas, corollaries etc.) can be formatted as follows:
+%% Example of a theorem:
+\begin{Theorem}
+Example text of a theorem.
+\end{Theorem}
+
+The text continues here. Proofs must be formatted as follows:
+
+%% Example of a proof:
+\begin{proof}[Proof of Theorem 1]
+Text of the proof. Note that the phrase ``of Theorem 1'' is optional if it is clear which theorem is being referred to.
+\end{proof}
+The text continues here.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Discussion}
+
+Authors should discuss the results and how they can be interpreted from the perspective of previous studies and of the working hypotheses. The findings and their implications should be discussed in the broadest context possible. Future research directions may also be highlighted.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusions}
+
+This section is not mandatory, but can be added to the manuscript if the discussion is unusually long or complex.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Patents}
+
+This section is not mandatory, but may be added if there are patents resulting from the work reported in this manuscript.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{6pt} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% optional
+%\supplementary{The following supporting information can be downloaded at:  \linksupplementary{s1}, Figure S1: title; Table S1: title; Video S1: title.}
+
+% Only for the journal Methods and Protocols:
+% If you wish to submit a video article, please do so with any other supplementary material.
+% \supplementary{The following supporting information can be downloaded at: \linksupplementary{s1}, Figure S1: title; Table S1: title; Video S1: title. A supporting video article is available at doi: link.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\authorcontributions{For research articles with several authors, a short paragraph specifying their individual contributions must be provided. The following statements should be used ``Conceptualization, X.X. and Y.Y.; methodology, X.X.; software, X.X.; validation, X.X., Y.Y. and Z.Z.; formal analysis, X.X.; investigation, X.X.; resources, X.X.; data curation, X.X.; writing---original draft preparation, X.X.; writing---review and editing, X.X.; visualization, X.X.; supervision, X.X.; project administration, X.X.; funding acquisition, Y.Y. All authors have read and agreed to the published version of the manuscript.'', please turn to the  \href{http://img.mdpi.org/data/contributor-role-instruction.pdf}{CRediT taxonomy} for the term explanation. Authorship must be limited to those who have contributed substantially to the work~reported.}
+
+\funding{Please add: ``This research received no external funding'' or ``This research was funded by NAME OF FUNDER grant number XXX.'' and  and ``The APC was funded by XXX''. Check carefully that the details given are accurate and use the standard spelling of funding agency names at \url{https://search.crossref.org/funding}, any errors may affect your future funding.}
+
+\institutionalreview{In this section, you should add the Institutional Review Board Statement and approval number, if relevant to your study. You might choose to exclude this statement if the study did not require ethical approval. Please note that the Editorial Office might ask you for further information. Please add “The study was conducted in accordance with the Declaration of Helsinki, and approved by the Institutional Review Board (or Ethics Committee) of NAME OF INSTITUTE (protocol code XXX and date of approval).” for studies involving humans. OR “The animal study protocol was approved by the Institutional Review Board (or Ethics Committee) of NAME OF INSTITUTE (protocol code XXX and date of approval).” for studies involving animals. OR “Ethical review and approval were waived for this study due to REASON (please provide a detailed justification).” OR “Not applicable” for studies not involving humans or animals.}
+
+\informedconsent{Any research article describing a study involving humans should contain this statement. Please add ``Informed consent was obtained from all subjects involved in the study.'' OR ``Patient consent was waived due to REASON (please provide a detailed justification).'' OR ``Not applicable'' for studies not involving humans. You might also choose to exclude this statement if the study did not involve humans.
+
+Written informed consent for publication must be obtained from participating patients who can be identified (including by the patients themselves). Please state ``Written informed consent has been obtained from the patient(s) to publish this paper'' if applicable.}
+
+\dataavailability{In this section, please provide details regarding where data supporting reported results can be found, including links to publicly archived datasets analyzed or generated during the study. Please refer to suggested Data Availability Statements in section ``MDPI Research Data Policies'' at \url{https://www.mdpi.com/ethics}. If the study did not report any data, you might add ``Not applicable'' here.} 
+
+\acknowledgments{In this section you can acknowledge any support given which is not covered by the author contribution or funding sections. This may include administrative and technical support, or donations in kind (e.g., materials used for experiments).}
+
+\conflictsofinterest{Declare conflicts of interest or state ``The authors declare no conflict of interest.'' Authors must identify and declare any personal circumstances or interest that may be perceived as inappropriately influencing the representation or interpretation of reported research results. Any role of the funders in the design of the study; in the collection, analyses or interpretation of data; in the writing of the manuscript, or in the decision to publish the results must be declared in this section. If there is no role, please state ``The funders had no role in the design of the study; in the collection, analyses, or interpretation of data; in the writing of the manuscript, or in the decision to publish the~results''.} 
+
+%% Optional
+\sampleavailability{Samples of the compounds ... are available from the authors.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Only for journal Encyclopedia
+%\entrylink{The Link to this entry published on the encyclopedia platform.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Optional
+\abbreviations{Abbreviations}{
+The following abbreviations are used in this manuscript:\\
+
+\noindent 
+\begin{tabular}{@{}ll}
+MDPI & Multidisciplinary Digital Publishing Institute\\
+DOAJ & Directory of open access journals\\
+TLA & Three letter acronym\\
+LD & Linear dichroism
+\end{tabular}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Optional
+\appendixtitles{no} % Leave argument "no" if all appendix headings stay EMPTY (then no dot is printed after "Appendix A"). If the appendix sections contain a heading then change the argument to "yes".
+\appendixstart
+\appendix
+\section[\appendixname~\thesection]{}
+\subsection[\appendixname~\thesubsection]{}
+The appendix is an optional section that can contain details and data supplemental to the main text---for example, explanations of experimental details that would disrupt the flow of the main text but nonetheless remain crucial to understanding and reproducing the research shown; figures of replicates for experiments of which representative data are shown in the main text can be added here if brief, or as Supplementary Data. Mathematical proofs of results not central to the paper can be added as an appendix.
+
+\begin{table}[H] 
+\caption{This is a table caption.\label{tab5}}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\begin{tabularx}{\textwidth}{CCC}
+\toprule
+\textbf{Title 1}	& \textbf{Title 2}	& \textbf{Title 3}\\
+\midrule
+Entry 1		& Data			& Data\\
+Entry 2		& Data			& Data\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section[\appendixname~\thesection]{}
+All appendix sections must be cited in the main text. In the appendices, Figures, Tables, etc. should be labeled, starting with ``A''---e.g., Figure A1, Figure A2, etc.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{adjustwidth}{-\extralength}{0cm}
+%\printendnotes[custom] % Un-comment to print a list of endnotes
+
+\reftitle{References}
+
+% Please provide either the correct journal abbreviation (e.g. according to the “List of Title Word Abbreviations” http://www.issn.org/services/online-services/access-to-the-ltwa/) or the full name of the journal.
+% Citations and References in Supplementary files are permitted provided that they also appear in the reference list here. 
+
+%=====================================
+% References, variant A: external bibliography
+%=====================================
+%\bibliography{your_external_BibTeX_file}
+
+%=====================================
+% References, variant B: internal bibliography
+%=====================================
+\begin{thebibliography}{999}
+% Reference 1
+\bibitem[Author1(year)]{ref-journal}
+Author~1, T. The title of the cited article. {\em Journal Abbreviation} {\bf 2008}, {\em 10}, 142--149.
+% Reference 2
+\bibitem[Author2(year)]{ref-book1}
+Author~2, L. The title of the cited contribution. In {\em The Book Title}; Editor 1, F., Editor 2, A., Eds.; Publishing House: City, Country, 2007; pp. 32--58.
+% Reference 3
+\bibitem[Author3(year)]{ref-book2}
+Author 1, A.; Author 2, B. \textit{Book Title}, 3rd ed.; Publisher: Publisher Location, Country, 2008; pp. 154--196.
+% Reference 4
+\bibitem[Author4(year)]{ref-unpublish}
+Author 1, A.B.; Author 2, C. Title of Unpublished Work. \textit{Abbreviated Journal Name} year, \textit{phrase indicating stage of publication (submitted; accepted; in press)}.
+% Reference 5
+\bibitem[Author5(year)]{ref-communication}
+Author 1, A.B. (University, City, State, Country); Author 2, C. (Institute, City, State, Country). Personal communication, 2012.
+% Reference 6
+\bibitem[Author6(year)]{ref-proceeding}
+Author 1, A.B.; Author 2, C.D.; Author 3, E.F. Title of presentation. In Proceedings of the Name of the Conference, Location of Conference, Country, Date of Conference (Day Month Year); Abstract Number (optional), Pagination (optional).
+% Reference 7
+\bibitem[Author7(year)]{ref-thesis}
+Author 1, A.B. Title of Thesis. Level of Thesis, Degree-Granting University, Location of University, Date of Completion.
+% Reference 8
+\bibitem[Author8(year)]{ref-url}
+Title of Site. Available online: URL (accessed on Day Month Year).
+\end{thebibliography}
+
+% If authors have biography, please use the format below
+%\section*{Short Biography of Authors}
+%\bio
+%{\raisebox{-0.35cm}{\includegraphics[width=3.5cm,height=5.3cm,clip,keepaspectratio]{Definitions/author1.pdf}}}
+%{\textbf{Firstname Lastname} Biography of first author}
+%
+%\bio
+%{\raisebox{-0.35cm}{\includegraphics[width=3.5cm,height=5.3cm,clip,keepaspectratio]{Definitions/author2.jpg}}}
+%{\textbf{Firstname Lastname} Biography of second author}
+
+% For the MDPI journals use author-date citation, please follow the formatting guidelines on http://www.mdpi.com/authors/references
+% To cite two works by the same author: \citeauthor{ref-journal-1a} (\citeyear{ref-journal-1a}, \citeyear{ref-journal-1b}). This produces: Whittaker (1967, 1975)
+% To cite two works by the same author with specific pages: \citeauthor{ref-journal-3a} (\citeyear{ref-journal-3a}, p. 328; \citeyear{ref-journal-3b}, p.475). This produces: Wong (1999, p. 328; 2000, p. 475)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% for journal Sci
+%\reviewreports{\\
+%Reviewer 1 comments and authors’ response\\
+%Reviewer 2 comments and authors’ response\\
+%Reviewer 3 comments and authors’ response
+%}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{adjustwidth}
+\end{document}
+
