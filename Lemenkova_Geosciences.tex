@@ -5,6 +5,34 @@
 \documentclass[geosciences,article,submit,pdftex,moreauthors]{Definitions/mdpi} 
 
 \graphicspath{{figures/}} % path to folder with figures
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
 
 %=================================================================
 % MDPI internal commands
@@ -185,7 +213,7 @@ Climate input datasets from the TerraClimate have been visualized using methodol
 The topographic map of Mongolia (sourced from \cite{GEBCO}) was visualized for the clipped region of the country using ‘wiki-schwarzwald-d050 cpt’. The GEBCO data are widely used in the geosciences due to the unprecedentedly high resolution, reliability and precision of the raster \cite{Liuetal2019,Nock,Lemenkova2020m,Saito}. The inspected data range shows the highest point at Khüiten Peak (4,374 m) in the SW of the country on the border with China in the Altai Range, the topographic mean is 1319.129 m, SD is 571.535 m, according to the GDAL data inspection. 
 The minimal temperatures in Mongolia for the April 2019 (Fig. \ref{fig2}) were identified as minimum=-43.000°C, maximum=-16.100°C, mean=-27.088°C, StdDev=4.858°C based on the TerraClimate dataset. The coldest region is noted as surroundings of the Uus Nuur and Tes River in the NW of the country. 
 
-The maximal temperatures for the April 2019 (Fig. \ref{fig3}) were shown the following results for the April 2019: minimum=-32.100°C, maximum=1.000°C, mean=-15.443°C, StdDev=4.977 °C. The data range for the wind speed (Fig. \ref{fig4}) shown following results: minimum=0.000 m/s, maximum=4.600m/s, Mean=2.019m/s, StdDev=1.031 m/s. The wind demonstrates the highest values in the Gobi Desert region in the SE and the eastern region of the country (Choibalsan region) which well corresponds with the leveled topography of these regions. In contrast, the lowest values of the wind speed are notable in the NW of the country around the cities Khovd, Ölgii and Ulaangom, as well as in the Altai Mts region.
+The maximal temperatures for the April 2019 (Fig. \ref{fig3}) were shown the following results for the April 2019: minimum=-32.100°C, maximum=1.000°C, mean=-15.443°C, StdDev=4.977 °C. The data range for the wind speed (Fig. \ref{fig4}) shown following results: minimum=0.000 m/s, maximum=4.600m/s, Mean=2.019m/s, StdDev=1.031 m/s. The wind demonstrates the highest values in the Gobi Desert region in the SE and the eastern region of the country (Choibalsan region) which well corresponds with the leveled topography of these regions. In contrast, the lowest values of the wind speed are notable in the NW of the country around the cities Khovd, \"Olgii and Ulaangom, as well as in the Altai Mts region.
 
 \begin{figure}[H]\centering
 	\includegraphics[width=14.0 cm]{Fig_08.jpg}
@@ -292,6 +320,889 @@ CPT & Color Palette Table \\
 SD & Standard Deviation \\
 GDAL & Geospatial Data Abstraction Library
 \end{tabular}}
+
+\newpage
+\appendixtitles{yes} % Leave argument "no" if all appendix headings stay EMPTY (then no dot is printed after "Appendix A"). If the appendix sections contain a heading then change the argument to "yes".
+\appendixstart
+\appendix
+\section[\appendixname~\thesection]{GMT scripts for topographic map}
+\subsection[\appendixname~\thesubsection]{Topographic map based on GEBCO/SRTM}
+
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig1}]
+#!/bin/sh
+# Purpose: shaded relief grid raster map from the GEBCO 15 arc sec global data set (here: Mongolia)
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+
+# GMT set up
+gmt set FORMAT_GEO_MAP=dddF \
+    MAP_FRAME_PEN=dimgray \
+    MAP_FRAME_WIDTH=0.1c \
+    MAP_TITLE_OFFSET=1c \
+    MAP_ANNOT_OFFSET=0.1c \
+    MAP_TICK_PEN_PRIMARY=thinner,dimgray \
+    MAP_GRID_PEN_PRIMARY=thin,white \
+    MAP_GRID_PEN_SECONDARY=thinnest,white \
+    FONT_TITLE=12p,Palatino-Roman,black \
+    FONT_ANNOT_PRIMARY=7p,0,dimgray \
+    FONT_LABEL=7p,0,dimgray \
+# Overwrite defaults of GMT
+gmtdefaults -D > .gmtdefaults
+
+# Extract a subset of ETOPO1m for the study area
+#gmt grdcut ETOPO1_Ice_g_gmt4.grd -R87.5/120/41.5/52.5 -Gmn_relief.nc
+gmt grdcut GEBCO_2019.nc -R87.5/120/41.5/52.5 -Gmn_relief.nc
+gdalinfo -stats mn_relief.nc
+# Minimum=-155.000, Maximum=4848.000, Mean=1319.129, StdDev=571.535
+
+# Make color palette
+#gmt makecpt -Cdem3.cpt -V -T-155/4848 > pauline.cpt
+#gmt makecpt -Cwiki-schwarzwald-d020 -V -T500/4848 > pauline.cpt
+gmt makecpt -Cwiki-schwarzwald-d050 -V -T500/4400 > pauline.cpt
+# elevation etopo1 world elevation dem1 dem2 dem3 globe geo srtm turbo terra earth relief
+
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i  -Dh -M -EMN > Mongolia.txt
+#gmt pscoast -Dh -M -ELB > Mongolia.txt
+
+ps=Topo_MN.ps
+# Make background transparent image
+gmt grdimage mn_relief.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i  -I+a15+ne0.75 -t100 -Xc -P -K > $ps
+    
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i  Mongolia.txt -O -K >> $ps
+
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_relief.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i  -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_relief.nc -R -J -C500 -Wthinnest,darkbrown -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+#gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+    
+# Add color legend
+gmt psscale -Dg87.2/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    --FONT_LABEL=8p,0,black \
+    --FONT_ANNOT_PRIMARY=7p,0,black \
+    --FONT_TITLE=6p,0,black \
+    -Bg500f50a500+l"Colormap: 'wiki-schwarzwald-d050' elevation scale by Wikimedia Commons free media repository [R=0/4906 C=RGB]" \
+    -I0.2 -By+lm -O -K >> $ps
+# scheme for maps of North Rhine-Westphalia by Wikipedia contributor TUBS.
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    --FORMAT_GEO_MAP=ddd:mm:ssF \
+    --MAP_GRID_PEN_PRIMARY=thinner,grey \
+    --MAP_GRID_PEN_SECONDARY=thinnest,grey \
+    -Bpxg10f5a5 -Bpyg10f5a5 -Bsxg5 -Bsyg5 \
+    --MAP_TITLE_OFFSET=0.9c \
+    --FONT_ANNOT_PRIMARY=8p,0,black \
+    --FONT_LABEL=8p,25,black \
+    --FONT_TITLE=14p,25,black \
+    -B+t"Topographic map of Mongolia" -O -K >> $ps
+    
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    --FONT_LABEL=8p,0,black \
+    --FONT_ANNOT_PRIMARY=8p,0,black \
+    --MAP_TITLE_OFFSET=0.1c \
+    --MAP_ANNOT_OFFSET=0.1c \
+    --MAP_LABEL_OFFSET=0.1c \
+    -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+
+# Texts
+# Hydrology
+gmt pstext -R -J -N -O -K \
+-F+jTL+f9p,26,blue2+jLB -Gwhite@60 >> $ps << EOF
+92.3 50.1 Uvs Nuur
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f9p,26,blue2+jLB >> $ps << EOF
+93.3 48.1 Khyargas
+93.3 47.7 Nuur
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f10p,26,blue2+jLB+a-340 -Gwhite@60 >> $ps << EOF
+103.5 49.63 Selenga
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f10p,26,blue2+jLB+a-335 -Gwhite@60 >> $ps << EOF
+110.3 47.4 Kherlen
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f10p,26,blue2+jLB+a-330 -Gwhite@60 >> $ps << EOF
+110.5 48.7 Onon
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f10p,26,blue2+jLB+a-45 -Gwhite@60 >> $ps << EOF
+93.06 49.47 Tes
+EOF
+#
+# Mts
+gmt pstext -R -J -N -O -K \
+-F+jTL+f11p,26,white+jLB+a-55  >> $ps << EOF
+89.0 48.6  A  l  t  a  i   M  t  s
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f11p,26,white+jLB+a-30 >> $ps << EOF
+96.3 48.0 Khangai Mts
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f10p,26,white+jLB+a-315 >> $ps << EOF
+107.3 47.3 Khentii Mts
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f11p,26,black+jLB+a-330  >> $ps << EOF
+105.1 42.0 G o b i  D e s e r t
+EOF
+# Cities
+gmt pstext -R -J -N -O -K \
+-F+f9p,0,black+jLB -Gwhite@40 >> $ps << EOF
+103.70 48.20 Ulaanbaatar
+EOF
+gmt psxy -R -J -Ss -W0.5p -Gred -O -K << EOF >> $ps
+106.92 47.92 0.30c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,black+jLB -Gwhite@40 >> $ps << EOF
+104.20 49.10 Erdenet
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+104.04 49.02 0.20c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,black+jLB -Gwhite@40 >> $ps << EOF
+106.10 49.50 Darkhan
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+105.95 49.46 0.20c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,black+jLB -Gwhite@30 >> $ps << EOF
+112.70 47.63 Choibalsan
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+114.53 48.07 0.20c
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+100.15 49.63 0.20c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f9p,0,yellow+jLB >> $ps << EOF
+91.40 48.15 Khovd
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+91.64 48.00 0.20c
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+89.97 48.96 0.20c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f9p,0,yellow+jLB >> $ps << EOF
+100.90 45.80 Bayankhongor
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+100.72 46.19 0.20c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f9p,0,yellow+jLB >> $ps << EOF
+102.93 46.36 Arvaikheer
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+102.77 46.26 0.20c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f9p,0,black+jLB -Gwhite@40 >> $ps << EOF
+89.15 50.10 Ulaangom
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+92.06 49.98 0.20c
+EOF
+
+# insert map
+# Countries codes: ISO 3166-1 alpha-2. Continent codes AF (Africa), AN (Antarctica), AS (Asia), EU (Europe), OC (Oceania), NA (North America), or SA (South America). -EEU+ggrey
+gmt psbasemap -R -J -O -K -DjBR+w2.8c+stmp >> $ps
+read x0 y0 w h < tmp
+gmt pscoast --MAP_GRID_PEN_PRIMARY=thinnest,grey -Rg -JG102/5N/$w -Da -Glightgoldenrod1 -A5000 -Bga -Wfaint -EMN+gred -Sdodgerblue -O -K -X$x0 -Y$y0 >> $ps
+#gmt pscoast -Rg -JG12/5N/$w -Da -Gbrown -A5000 -Bg -Wfaint -ECM+gbisque -O -K -X$x0 -Y$y0 >> $ps
+gmt psxy -R -J -O -K -T  -X-${x0} -Y-${y0} >> $ps
+
+# Add GMT logo
+gmt logo -Dx7.0/-2.7+o0.1i/0.1i+w2c -O -K >> $ps
+
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X1.0c -Y2.5c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.4 9.0 Digital elevation data: SRTM/GEBCO, 15 arc sec (ca. 450 m) resolution grid
+EOF
+
+# Convert to image file using GhostScript
+gmt psconvert Topo_MN.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+\section[\appendixname~\thesection]{GMT scripts for climate maps}
+
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig2}]
+#!/bin/sh
+# Purpose: Climate datasets https://climate.northwestknowledge.net/TERRACLIMATE/index_directDownloads.php (here: Mongolia)
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+
+# GMT set up
+gmt set FORMAT_GEO_MAP=dddF \
+    MAP_FRAME_PEN=dimgray \
+    MAP_FRAME_WIDTH=0.1c \
+    MAP_TITLE_OFFSET=1c \
+    MAP_ANNOT_OFFSET=0.1c \
+    MAP_TICK_PEN_PRIMARY=thinner,dimgray \
+    MAP_GRID_PEN_PRIMARY=thin,white \
+    MAP_GRID_PEN_SECONDARY=thinnest,white \
+    FONT_TITLE=12p,Palatino-Roman,black \
+    FONT_ANNOT_PRIMARY=7p,0,dimgray \
+    FONT_LABEL=7p,0,dimgray \
+# Overwrite defaults of GMT
+gmtdefaults -D > .gmtdefaults
+
+# Extract subset of img file in Mercator or Geographic format
+gmt grdcut TerraClimate_tmin_2019.nc -R87.5/120/41.5/52.5 -Gmn_tmin.nc
+gdalinfo -stats mn_tmin.nc
+# Minimum=-43.000, Maximum=-16.100, Mean=-27.088, StdDev=4.858
+gmt makecpt -Cjet -T-43/-16/0.5 > pauline.cpt
+
+#####################################################################
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+#####################################################################
+
+ps=MN_tmin.ps
+# Make background transparent image
+gmt grdimage mn_tmin.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps
+    
+#####################################################################
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_tmin.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_tmin.nc -R -J -C2 -A2+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+#gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+#####################################################################
+    
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    --FONT_LABEL=8p,0,black \
+    --FONT_ANNOT_PRIMARY=7p,0,black \
+    --FONT_TITLE=6p,0,black \
+    -Bg4f0.2a2+l"Colormap: 'jet' (Dark to light blue, white, yellow and red [C=RGB] -33/-4/0.5)" \
+    -I0.2 -By+lm -O -K >> $ps
+    
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    --FORMAT_GEO_MAP=ddd:mm:ssF \
+    --MAP_GRID_PEN_PRIMARY=thinner,grey \
+    --MAP_GRID_PEN_SECONDARY=thinnest,grey \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    --MAP_TITLE_OFFSET=1.1c \
+    --FONT_ANNOT_PRIMARY=8p,0,black \
+    --FONT_LABEL=8p,25,black \
+    --FONT_TITLE=14p,25,black \
+    -B+t"Tmin (minimum temperature) in Mongolia (2019)" -O -K >> $ps
+    
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    --FONT_LABEL=8p,0,black \
+    --FONT_ANNOT_PRIMARY=8p,0,black \
+    --MAP_TITLE_OFFSET=0.1c \
+    --MAP_ANNOT_OFFSET=0.1c \
+    -Lx14.0c/-2.3c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+
+# Texts <full names of texts are given in code-1>
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,black+jLB -Gwhite@30 >> $ps << EOF
+100.90 45.80 Bayankhongor
+EOF
+
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+
+# Convert to image file using GhostScript
+gmt psconvert MN_tmin.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig3}]
+#!/bin/sh
+# #!/bin/sh
+# Purpose: Climate datasets https://climate.northwestknowledge.net/TERRACLIMATE/index_directDownloads.php (here: Mongolia)
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+
+# GMT set up
+gmt set FORMAT_GEO_MAP=dddF \
+    MAP_FRAME_PEN=dimgray \
+    MAP_FRAME_WIDTH=0.1c \
+    MAP_TITLE_OFFSET=1c \
+    MAP_ANNOT_OFFSET=0.1c \
+    MAP_TICK_PEN_PRIMARY=thinner,dimgray \
+    MAP_GRID_PEN_PRIMARY=thin,white \
+    MAP_GRID_PEN_SECONDARY=thinnest,white \
+    FONT_TITLE=12p,Palatino-Roman,black \
+    FONT_ANNOT_PRIMARY=7p,0,dimgray \
+    FONT_LABEL=7p,0,dimgray \
+# Overwrite defaults of GMT
+gmtdefaults -D > .gmtdefaults
+
+# Extract subset of img file in Mercator or Geographic format
+gmt grdcut TerraClimate_tmax_2019.nc -R87.5/120/41.5/52.5 -Gmn_tmax.nc
+gdalinfo -stats mn_tmax.nc
+# Minimum=-32.100, Maximum=1.000, Mean=-15.443, StdDev=4.977
+gmt makecpt -Cwysiwyg -T-33/1/0.5 > pauline.cpt
+
+#####################################################################
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+#####################################################################
+
+ps=MN_tmax.ps
+# Make background transparent image
+gmt grdimage mn_tmax.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps
+    
+#####################################################################
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_tmax.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_tmax.nc -R -J -C2 -A2+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+#gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+#####################################################################
+    
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    --FONT_LABEL=8p,0,black \
+    --FONT_ANNOT_PRIMARY=7p,0,black \
+    --FONT_TITLE=6p,0,black \
+    -Bg4f0.2a2+l"Colormap: 'wysiwyg': 20 well-separated RGB colors [C=RGB] -33/-4/0.5)" \
+    -I0.2 -By+lm -O -K >> $ps
+    
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    --FORMAT_GEO_MAP=ddd:mm:ssF \
+    --MAP_GRID_PEN_PRIMARY=thinner,grey \
+    --MAP_GRID_PEN_SECONDARY=thinnest,grey \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    --MAP_TITLE_OFFSET=1.1c \
+    --FONT_ANNOT_PRIMARY=8p,0,black \
+    --FONT_LABEL=8p,25,black \
+    --FONT_TITLE=14p,25,black \
+    -B+t"Tmax (maximum temperature) in Mongolia (2019)" -O -K >> $ps
+    
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    --FONT_LABEL=8p,0,black \
+    --FONT_ANNOT_PRIMARY=8p,0,black \
+    --MAP_TITLE_OFFSET=0.1c \
+    --MAP_ANNOT_OFFSET=0.1c \
+    -Lx14.0c/-2.3c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+
+# Texts
+gmt pstext -R -J -N -O -K \
+-F+f9p,0,black+jLB -Gwhite@30 >> $ps << EOF
+103.70 48.20 Ulaanbaatar
+EOF
+gmt psxy -R -J -Ss -W0.5p -Gred -O -K << EOF >> $ps
+106.92 47.92 0.30c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,black+jLB -Gwhite@30 >> $ps << EOF
+89.15 50.10 Ulaangom
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+92.06 49.98 0.20c
+EOF
+
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+
+# Convert to image file using GhostScript
+gmt psconvert MN_tmax.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig4}]
+#!/bin/sh
+# #!/bin/sh
+# Purpose: Climate datasets https://climate.northwestknowledge.net/TERRACLIMATE/index_directDownloads.php (here: Mongolia)
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+
+# GMT set up
+gmt set FORMAT_GEO_MAP=dddF \
+    MAP_FRAME_PEN=dimgray \
+    MAP_FRAME_WIDTH=0.1c \
+    MAP_TITLE_OFFSET=1c \
+    MAP_ANNOT_OFFSET=0.1c \
+    MAP_TICK_PEN_PRIMARY=thinner,dimgray \
+    MAP_GRID_PEN_PRIMARY=thin,white \
+    MAP_GRID_PEN_SECONDARY=thinnest,white \
+    FONT_TITLE=12p,Palatino-Roman,black \
+    FONT_ANNOT_PRIMARY=7p,0,dimgray \
+    FONT_LABEL=7p,0,dimgray \
+# Overwrite defaults of GMT
+gmtdefaults -D > .gmtdefaults
+
+# Extract subset of img file in Mercator or Geographic format
+gmt grdcut TerraClimate_ws_2018.nc -R87.5/120/41.5/52.5 -Gmn_wind.nc
+gdalinfo -stats mn_wind.nc
+# Minimum=0.000, Maximum=4.600, Mean=2.019, StdDev=1.031
+gmt makecpt -Cplasma -T0/4.6 -Ic > pauline.cpt
+#gmt makecpt -Csky-33 -T0/4.6 -Ic > pauline.cpt
+# gmt makecpt --help
+
+#####################################################################
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+#####################################################################
+
+ps=MN_wind.ps
+# Make background transparent image
+gmt grdimage mn_wind.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps
+    
+#####################################################################
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_wind.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_wind.nc -R -J -C0.4 -A0.4+f7p,0,black+gwhite@60 -Wthinnest,white -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+#gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+#####################################################################
+    
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    -Bg1f0.1a0.5+l"Colormap 'plasma' Option D from matplotlib (-T0/4.6 [C=RGB])" \
+    -I0.2 -By+l"m/s" -O -K >> $ps
+    
+# Add grid
+gmt psbasemap -R -J \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    -B+t"WS (Wind Speed) in Mongolia (2019)" -O -K >> $ps
+    
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+
+# Texts
+gmt pstext -R -J -N -O -K \
+-F+jTL+f10p,26,black+jLB+a-315 >> $ps << EOF
+107.3 47.3 Khentii Mts
+EOF
+
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+# Convert to image file using GhostScript
+gmt psconvert MN_wind.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig5}]
+#!/bin/sh
+# Purpose: Climate datasets https://climate.northwestknowledge.net/TERRACLIMATE/index_directDownloads.php (here: Mongolia)
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+
+# Extract subset of img file in Mercator or Geographic format
+gmt grdcut TerraClimate_soil_2019.nc -R87.5/120/41.5/52.5 -Gmn_soil.nc
+gdalinfo -stats mn_soil.nc
+#  Minimum=0.000, Maximum=155.000, Mean=6.393, StdDev=13.850
+#gmt makecpt -Ccool -T0/20 > pauline.cpt
+gmt makecpt -Csky-18 -T0/40 > pauline.cpt
+
+#####################################################################
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+#####################################################################
+
+ps=MN_soil.ps
+# Make background transparent image
+gmt grdimage mn_soil.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps
+    
+#####################################################################
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_soil.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_soil.nc -R -J -C5 -A5+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+#gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+#####################################################################
+    
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    -Bg2f0.2a2+l"Colormap 'sky-18' by Rafi, GraphicsFuel (0/40 [C=RGB])" \
+    -I0.2 -By+l"mm/m" -O -K >> $ps
+    
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    -B+t"Soil moisture map of Mongolia (2019)" -O -K >> $ps
+    
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+
+# Texts
+# Hydrology
+gmt pstext -R -J -N -O -K \
+-F+jTL+f9p,26,blue2+jLB -Gwhite@60 >> $ps << EOF
+92.3 50.1 Uvs Nuur
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f9p,26,blue2+jLB >> $ps << EOF
+93.3 48.1 Khyargas
+93.3 47.7 Nuur
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,red+jLB >> $ps << EOF
+103.2 46.2 Arvaikheer
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+102.77 46.26 0.20c
+EOF
+
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+
+# Convert to image file using GhostScript
+gmt psconvert MN_soil.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig6}]
+#!/bin/sh
+# #!/bin/sh
+# Purpose: Climate datasets https://climate.northwestknowledge.net/TERRACLIMATE/index_directDownloads.php (here: Mongolia)
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+
+# Extract subset of img file in Mercator or Geographic format
+gmt grdcut TerraClimate_srad_2019.nc -R87.5/120/41.5/52.5 -Gmn_srad.nc
+gdalinfo -stats mn_srad.nc
+# Minimum=40.000, Maximum=113.000, Mean=77.007, StdDev=15.877
+gmt makecpt -C22_hue_sat_value2 -T40/113 > pauline.cpt
+# gmt makecpt --help
+
+
+#####################################################################
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+#####################################################################
+
+ps=MN_srad.ps
+# Make background transparent image
+gmt grdimage mn_srad.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps
+    
+#####################################################################
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_srad.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_srad.nc -R -J -C10 -A20+f7p,0,black+gwhite@60 -Wthinner,brown -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+#####################################################################
+    
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    -Bg10f1a10+l"Colormap '22 hue sat value2' from colour tables of IDL KST Python (-T40/113 [C=RGB])" \
+    -I0.2 -By+l"Wm@+-2@+" -O -K >> $ps
+    
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    --FORMAT_GEO_MAP=ddd:mm:ssF \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    -B+t"Downward surface shortwave radiation (srad) in Mongolia (2019)" -O -K >> $ps
+    
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+
+# Texts
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,black+jLB -Gwhite@20 >> $ps << EOF
+99.50 45.5 Bayankhongor
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+100.72 46.19 0.20c
+EOF
+
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+
+# Convert to image file using GhostScript
+gmt psconvert MN_srad.ps -A0.5c -E720 -Tj -Z
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig7}]
+#!/bin/sh
+# Purpose: Climate datasets https://climate.northwestknowledge.net/TERRACLIMATE/index_directDownloads.php (here: Mongolia)
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+
+# Extract subset of img file in Mercator or Geographic format
+gmt grdcut TerraClimate_swe_2019.nc -R87.5/120/41.5/52.5 -Gmn_swe.nc
+gdalinfo -stats mn_swe.nc
+# Minimum=0.000, Maximum=491.000, Mean=16.552, StdDev=21.985
+gmt makecpt -Cmag -T0/30 -Ic > pauline.cpt
+
+#####################################################################
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+#####################################################################
+
+ps=MN_swe.ps
+# Make background transparent image
+gmt grdimage mn_swe.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps
+    
+#####################################################################
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_swe.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_swe.nc -R -J -C50 -A50+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+#gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+#####################################################################
+    
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    -Bg50f0.5a5+l"Colormap 'mag' color scheme (-T0/30 [C=RGB])" \
+    -I0.2 -By+l"mm" -O -K >> $ps
+    
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    --FORMAT_GEO_MAP=ddd:mm:ssF \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    -B+t"Snow Water Equivalent (SWE) at end of month in Mongolia (2019)" -O -K >> $ps
+    
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+
+# Texts
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,white+jLB >> $ps << EOF
+99.50 45.5 Bayankhongor
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+100.72 46.19 0.20c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,white+jLB >> $ps << EOF
+103.2 46.2 Arvaikheer
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+102.77 46.26 0.20c
+EOF
+
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+
+# Convert to image file using GhostScript
+gmt psconvert MN_swe.ps -A0.5c -E720 -Tj -Z
+
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig8}]
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig9}]
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig10}]
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig11}]
+#!/bin/sh
+# Purpose: Climate datasets https://climate.northwestknowledge.net/TERRACLIMATE/index_directDownloads.php (here: Mongolia)
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+
+# Extract subset of img file in Mercator or Geographic format
+gmt grdcut TerraClimate_PDSI_2019.nc -R87.5/120/41.5/52.5 -Gmn_pdsi.nc
+gdalinfo -stats mn_pdsi.nc
+# Minimum=-8.100, Maximum=5.800, Mean=-0.626, StdDev=2.041
+gmt makecpt -Cturbo -T-7.0/5.0/0.1 -Ic > pauline.cpt
+# gmt makecpt --help
+
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+
+ps=MN_pdsi.ps
+# Make background transparent image
+gmt grdimage mn_pdsi.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps
+    
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_pdsi.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_pdsi.nc -R -J -C2 -A2+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+#gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+    
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    -Bg2f0.1a1+l"Colormap 'turbo' Google's Improved Rainbow Colormap (-8.1/5.8/0.1 [C=RGB])" \
+    -I0.2 -By+lm -O -K >> $ps
+    
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    --FORMAT_GEO_MAP=ddd:mm:ssF \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    -B+t"PDSI (Palmer Drought Severity Index) in Mongolia (2019)" -O -K >> $ps
+    
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+
+# Texts
+gmt pstext -R -J -N -O -K \
+-F+jTL+f11p,26,white+jLB+a-330  >> $ps << EOF
+105.1 42.0 G o b i  D e s e r t
+EOF
+
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+
+# Convert to image file using GhostScript
+gmt psconvert MN_pdsi.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{adjustwidth}{-\extralength}{0cm}
