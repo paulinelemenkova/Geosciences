@@ -332,7 +332,6 @@ GDAL & Geospatial Data Abstraction Library
 #!/bin/sh
 # Purpose: shaded relief grid raster map from the GEBCO 15 arc sec global data set (here: Mongolia)
 # GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
-
 # GMT set up
 gmt set FORMAT_GEO_MAP=dddF \
     MAP_FRAME_PEN=dimgray \
@@ -347,31 +346,24 @@ gmt set FORMAT_GEO_MAP=dddF \
     FONT_LABEL=7p,0,dimgray \
 # Overwrite defaults of GMT
 gmtdefaults -D > .gmtdefaults
-
 # Extract a subset of ETOPO1m for the study area
 #gmt grdcut ETOPO1_Ice_g_gmt4.grd -R87.5/120/41.5/52.5 -Gmn_relief.nc
 gmt grdcut GEBCO_2019.nc -R87.5/120/41.5/52.5 -Gmn_relief.nc
 gdalinfo -stats mn_relief.nc
 # Minimum=-155.000, Maximum=4848.000, Mean=1319.129, StdDev=571.535
-
 # Make color palette
 #gmt makecpt -Cdem3.cpt -V -T-155/4848 > pauline.cpt
 #gmt makecpt -Cwiki-schwarzwald-d020 -V -T500/4848 > pauline.cpt
 gmt makecpt -Cwiki-schwarzwald-d050 -V -T500/4400 > pauline.cpt
 # elevation etopo1 world elevation dem1 dem2 dem3 globe geo srtm turbo terra earth relief
-
 # create mask of vector layer from the DCW of country's polygon
 gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i  -Dh -M -EMN > Mongolia.txt
-#gmt pscoast -Dh -M -ELB > Mongolia.txt
-
 ps=Topo_MN.ps
 # Make background transparent image
-gmt grdimage mn_relief.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i  -I+a15+ne0.75 -t100 -Xc -P -K > $ps
-    
+gmt grdimage mn_relief.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i  -I+a15+ne0.75 -t100 -Xc -P -K > $ps  
 # CLIPPING
 # 1. Start: clip the map by mask to only include country
 gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i  Mongolia.txt -O -K >> $ps
-
 # 2. create map within mask
 # Add raster image
 gmt grdimage mn_relief.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i  -I+a15+ne0.75 -Xc -P -O -K >> $ps
@@ -382,10 +374,8 @@ gmt pscoast -R -J \
     -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
 #gmt pscoast -R -J \
     -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
-
 # 3: Undo the clipping
-gmt psclip -C -O -K >> $ps
-    
+gmt psclip -C -O -K >> $ps   
 # Add color legend
 gmt psscale -Dg87.2/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
     --FONT_LABEL=8p,0,black \
@@ -405,8 +395,7 @@ gmt psbasemap -R -J \
     --FONT_ANNOT_PRIMARY=8p,0,black \
     --FONT_LABEL=8p,25,black \
     --FONT_TITLE=14p,25,black \
-    -B+t"Topographic map of Mongolia" -O -K >> $ps
-    
+    -B+t"Topographic map of Mongolia" -O -K >> $ps 
 # Add scalebar, directional rose
 gmt psbasemap -R -J \
     --FONT_LABEL=8p,0,black \
@@ -416,7 +405,6 @@ gmt psbasemap -R -J \
     --MAP_LABEL_OFFSET=0.1c \
     -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
     -UBL/0p/-60p -O -K >> $ps
-
 # Texts
 # Hydrology
 gmt pstext -R -J -N -O -K \
@@ -525,7 +513,6 @@ EOF
 gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
 92.06 49.98 0.20c
 EOF
-
 # insert map
 # Countries codes: ISO 3166-1 alpha-2. Continent codes AF (Africa), AN (Antarctica), AS (Asia), EU (Europe), OC (Oceania), NA (North America), or SA (South America). -EEU+ggrey
 gmt psbasemap -R -J -O -K -DjBR+w2.8c+stmp >> $ps
@@ -533,16 +520,13 @@ read x0 y0 w h < tmp
 gmt pscoast --MAP_GRID_PEN_PRIMARY=thinnest,grey -Rg -JG102/5N/$w -Da -Glightgoldenrod1 -A5000 -Bga -Wfaint -EMN+gred -Sdodgerblue -O -K -X$x0 -Y$y0 >> $ps
 #gmt pscoast -Rg -JG12/5N/$w -Da -Gbrown -A5000 -Bg -Wfaint -ECM+gbisque -O -K -X$x0 -Y$y0 >> $ps
 gmt psxy -R -J -O -K -T  -X-${x0} -Y-${y0} >> $ps
-
 # Add GMT logo
 gmt logo -Dx7.0/-2.7+o0.1i/0.1i+w2c -O -K >> $ps
-
 # Add subtitle
 gmt pstext -R0/10/0/15 -JX10/10 -X1.0c -Y2.5c -N -O \
     -F+f10p,21,black+jLB >> $ps << EOF
 2.4 9.0 Digital elevation data: SRTM/GEBCO, 15 arc sec (ca. 450 m) resolution grid
 EOF
-
 # Convert to image file using GhostScript
 gmt psconvert Topo_MN.ps -A0.5c -E720 -Tj -Z
 \end{lstlisting}
@@ -553,7 +537,6 @@ gmt psconvert Topo_MN.ps -A0.5c -E720 -Tj -Z
 #!/bin/sh
 # Purpose: Climate datasets https://climate.northwestknowledge.net/TERRACLIMATE/index_directDownloads.php (here: Mongolia)
 # GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
-
 # GMT set up
 gmt set FORMAT_GEO_MAP=dddF \
     MAP_FRAME_PEN=dimgray \
@@ -568,28 +551,22 @@ gmt set FORMAT_GEO_MAP=dddF \
     FONT_LABEL=7p,0,dimgray \
 # Overwrite defaults of GMT
 gmtdefaults -D > .gmtdefaults
-
 # Extract subset of img file in Mercator or Geographic format
 gmt grdcut TerraClimate_tmin_2019.nc -R87.5/120/41.5/52.5 -Gmn_tmin.nc
 gdalinfo -stats mn_tmin.nc
 # Minimum=-43.000, Maximum=-16.100, Mean=-27.088, StdDev=4.858
 gmt makecpt -Cjet -T-43/-16/0.5 > pauline.cpt
-
 #####################################################################
 # create mask of vector layer from the DCW of country's polygon
 gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
 #####################################################################
-
 ps=MN_tmin.ps
 # Make background transparent image
-gmt grdimage mn_tmin.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps
-    
+gmt grdimage mn_tmin.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps 
 #####################################################################
 # CLIPPING
 # 1. Start: clip the map by mask to only include country
-
 gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
-
 # 2. create map within mask
 # Add raster image
 gmt grdimage mn_tmin.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
@@ -600,11 +577,9 @@ gmt pscoast -R -J \
     -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
 #gmt pscoast -R -J \
     -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
-
 # 3: Undo the clipping
 gmt psclip -C -O -K >> $ps
 #####################################################################
-    
 # Add color legend
 gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
     --FONT_LABEL=8p,0,black \
@@ -612,7 +587,6 @@ gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
     --FONT_TITLE=6p,0,black \
     -Bg4f0.2a2+l"Colormap: 'jet' (Dark to light blue, white, yellow and red [C=RGB] -33/-4/0.5)" \
     -I0.2 -By+lm -O -K >> $ps
-    
 # Add grid
 gmt psbasemap -R -J \
     --MAP_FRAME_AXES=WEsN \
@@ -624,8 +598,7 @@ gmt psbasemap -R -J \
     --FONT_ANNOT_PRIMARY=8p,0,black \
     --FONT_LABEL=8p,25,black \
     --FONT_TITLE=14p,25,black \
-    -B+t"Tmin (minimum temperature) in Mongolia (2019)" -O -K >> $ps
-    
+    -B+t"Tmin (minimum temperature) in Mongolia (2019)" -O -K >> $ps 
 # Add scalebar, directional rose
 gmt psbasemap -R -J \
     --FONT_LABEL=8p,0,black \
@@ -634,22 +607,18 @@ gmt psbasemap -R -J \
     --MAP_ANNOT_OFFSET=0.1c \
     -Lx14.0c/-2.3c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
     -UBL/0p/-60p -O -K >> $ps
-
 # Texts <full names of texts are given in code-1>
 gmt pstext -R -J -N -O -K \
 -F+f8p,0,black+jLB -Gwhite@30 >> $ps << EOF
 100.90 45.80 Bayankhongor
 EOF
-
 # Add GMT logo
 gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
-
 # Add subtitle
 gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
     -F+f10p,21,black+jLB >> $ps << EOF
 2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
 EOF
-
 # Convert to image file using GhostScript
 gmt psconvert MN_tmin.ps -A0.5c -E720 -Tj -Z
 \end{lstlisting}
@@ -657,7 +626,6 @@ gmt psconvert MN_tmin.ps -A0.5c -E720 -Tj -Z
 \begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig3}]
 #!/bin/sh
 # GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
-
 # GMT set up
 gmt set FORMAT_GEO_MAP=dddF \
     MAP_FRAME_PEN=dimgray \
@@ -672,28 +640,22 @@ gmt set FORMAT_GEO_MAP=dddF \
     FONT_LABEL=7p,0,dimgray \
 # Overwrite defaults of GMT
 gmtdefaults -D > .gmtdefaults
-
 # Extract subset of img file in Mercator or Geographic format
 gmt grdcut TerraClimate_tmax_2019.nc -R87.5/120/41.5/52.5 -Gmn_tmax.nc
 gdalinfo -stats mn_tmax.nc
 # Minimum=-32.100, Maximum=1.000, Mean=-15.443, StdDev=4.977
 gmt makecpt -Cwysiwyg -T-33/1/0.5 > pauline.cpt
-
 #####################################################################
 # create mask of vector layer from the DCW of country's polygon
 gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
 #####################################################################
-
 ps=MN_tmax.ps
 # Make background transparent image
 gmt grdimage mn_tmax.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps
-    
 #####################################################################
 # CLIPPING
 # 1. Start: clip the map by mask to only include country
-
 gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
-
 # 2. create map within mask
 # Add raster image
 gmt grdimage mn_tmax.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
@@ -704,19 +666,16 @@ gmt pscoast -R -J \
     -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
 #gmt pscoast -R -J \
     -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
-
 # 3: Undo the clipping
 gmt psclip -C -O -K >> $ps
-#####################################################################
-    
+##################################################################### 
 # Add color legend
 gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
     --FONT_LABEL=8p,0,black \
     --FONT_ANNOT_PRIMARY=7p,0,black \
     --FONT_TITLE=6p,0,black \
     -Bg4f0.2a2+l"Colormap: 'wysiwyg': 20 well-separated RGB colors [C=RGB] -33/-4/0.5)" \
-    -I0.2 -By+lm -O -K >> $ps
-    
+    -I0.2 -By+lm -O -K >> $ps    
 # Add grid
 gmt psbasemap -R -J \
     --MAP_FRAME_AXES=WEsN \
@@ -728,8 +687,7 @@ gmt psbasemap -R -J \
     --FONT_ANNOT_PRIMARY=8p,0,black \
     --FONT_LABEL=8p,25,black \
     --FONT_TITLE=14p,25,black \
-    -B+t"Tmax (maximum temperature) in Mongolia (2019)" -O -K >> $ps
-    
+    -B+t"Tmax (maximum temperature) in Mongolia (2019)" -O -K >> $ps 
 # Add scalebar, directional rose
 gmt psbasemap -R -J \
     --FONT_LABEL=8p,0,black \
@@ -738,7 +696,6 @@ gmt psbasemap -R -J \
     --MAP_ANNOT_OFFSET=0.1c \
     -Lx14.0c/-2.3c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
     -UBL/0p/-60p -O -K >> $ps
-
 # Texts
 gmt pstext -R -J -N -O -K \
 -F+f9p,0,black+jLB -Gwhite@30 >> $ps << EOF
@@ -754,16 +711,13 @@ EOF
 gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
 92.06 49.98 0.20c
 EOF
-
 # Add GMT logo
 gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
-
 # Add subtitle
 gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
     -F+f10p,21,black+jLB >> $ps << EOF
 2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
 EOF
-
 # Convert to image file using GhostScript
 gmt psconvert MN_tmax.ps -A0.5c -E720 -Tj -Z
 \end{lstlisting}
@@ -771,7 +725,6 @@ gmt psconvert MN_tmax.ps -A0.5c -E720 -Tj -Z
 \begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig4}]
 #!/bin/sh
 # GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
-
 # GMT set up
 gmt set FORMAT_GEO_MAP=dddF \
     MAP_FRAME_PEN=dimgray \
@@ -786,7 +739,6 @@ gmt set FORMAT_GEO_MAP=dddF \
     FONT_LABEL=7p,0,dimgray \
 # Overwrite defaults of GMT
 gmtdefaults -D > .gmtdefaults
-
 # Extract subset of img file in Mercator or Geographic format
 gmt grdcut TerraClimate_ws_2018.nc -R87.5/120/41.5/52.5 -Gmn_wind.nc
 gdalinfo -stats mn_wind.nc
@@ -794,22 +746,17 @@ gdalinfo -stats mn_wind.nc
 gmt makecpt -Cplasma -T0/4.6 -Ic > pauline.cpt
 #gmt makecpt -Csky-33 -T0/4.6 -Ic > pauline.cpt
 # gmt makecpt --help
-
 #####################################################################
 # create mask of vector layer from the DCW of country's polygon
 gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
 #####################################################################
-
 ps=MN_wind.ps
 # Make background transparent image
-gmt grdimage mn_wind.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps
-    
+gmt grdimage mn_wind.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps 
 #####################################################################
 # CLIPPING
 # 1. Start: clip the map by mask to only include country
-
 gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
-
 # 2. create map within mask
 # Add raster image
 gmt grdimage mn_wind.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
@@ -820,35 +767,28 @@ gmt pscoast -R -J \
     -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
 #gmt pscoast -R -J \
     -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
-
 # 3: Undo the clipping
 gmt psclip -C -O -K >> $ps
-#####################################################################
-    
+#####################################################################   
 # Add color legend
 gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
     -Bg1f0.1a0.5+l"Colormap 'plasma' Option D from matplotlib (-T0/4.6 [C=RGB])" \
-    -I0.2 -By+l"m/s" -O -K >> $ps
-    
+    -I0.2 -By+l"m/s" -O -K >> $ps   
 # Add grid
 gmt psbasemap -R -J \
     -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
-    -B+t"WS (Wind Speed) in Mongolia (2019)" -O -K >> $ps
-    
+    -B+t"WS (Wind Speed) in Mongolia (2019)" -O -K >> $ps 
 # Add scalebar, directional rose
 gmt psbasemap -R -J \
     -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
     -UBL/0p/-60p -O -K >> $ps
-
-# Texts
+# Selected texts
 gmt pstext -R -J -N -O -K \
 -F+jTL+f10p,26,black+jLB+a-315 >> $ps << EOF
 107.3 47.3 Khentii Mts
 EOF
-
 # Add GMT logo
 gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
-
 # Add subtitle
 gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
     -F+f10p,21,black+jLB >> $ps << EOF
