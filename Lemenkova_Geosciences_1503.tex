@@ -1,0 +1,1319 @@
+%  LaTeX support: latex@mdpi.com 
+%  For support, please attach all files needed for compiling as well as the log file, and specify your operating system, LaTeX version, and LaTeX editor.
+
+%=================================================================
+\documentclass[geosciences,article,submit,pdftex,moreauthors]{Definitions/mdpi} 
+
+\graphicspath{{figures/}} % path to folder with figures
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+	
+\usepackage{soul} % highlighting text
+
+%=================================================================
+% MDPI internal commands
+\firstpage{1} 
+\makeatletter 
+\setcounter{page}{\@firstpage} 
+\makeatother
+\pubvolume{1}
+\issuenum{1}
+\articlenumber{0}
+\pubyear{2022}
+\copyrightyear{2022}
+%\externaleditor{Academic Editor: Firstname Lastname}
+\datereceived{} 
+\dateaccepted{} 
+\datepublished{} 
+%\datecorrected{} % Corrected papers include a "Corrected: XXX" date in the original paper.
+%\dateretracted{} % Corrected papers include a "Retracted: XXX" date in the original paper.
+\hreflink{https://doi.org/} % If needed use \linebreak
+%\doinum{}
+%------------------------------------------------------------------
+% The following line should be uncommented if the LaTeX file is uploaded to arXiv.org
+%\pdfoutput=1
+
+%=================================================================
+% Add packages and commands here. The following packages are loaded in our class file: fontenc, inputenc, calc, indentfirst, fancyhdr, graphicx, epstopdf, lastpage, ifthen, lineno, float, amsmath, setspace, enumitem, mathpazo, booktabs, sec, etoolbox, tabto, xcolor, soul, multirow, microtype, tikz, totcount, changepage, attrib, upgreek, cleveref, amsthm, hyphenat, natbib, hyperref, footmisc, url, geometry, newfloat, caption
+
+%=================================================================
+%% Please use the following mathematics environments: Theorem, Lemma, Corollary, Proposition, Characterization, Property, Problem, Example, ExamplesandDefinitions, Hypothesis, Remark, Definition, Notation, Assumption
+%% For proofs, please use the proof environment (the amsthm package is loaded by the MDPI class).
+
+%=================================================================
+% Full title of the paper (Capitalized)
+\Title{Console-based mapping of Mongolia using GMT cartographic scripting toolset for processing TerraClimate data}
+
+% MDPI internal command: Title for citation in the left column
+\TitleCitation{Console-based mapping of Mongolia using GMT cartographic scripting toolset for processing TerraClimate data}
+
+% Author Orchid ID: enter ID or remove command
+\newcommand{\orcidauthorA}{0000-0002-5759-1089} % Add \orcidA{} behind the author's name
+%\newcommand{\orcidauthorB}{0000-0000-0000-000X} % Add \orcidB{} behind the author's name
+
+% Authors, for the paper (add full first names)
+\Author{Polina Lemenkova $^{1}$\orcidA{}}
+
+%\longauthorlist{yes}
+
+% MDPI internal command: Authors, for metadata in PDF
+\AuthorNames{Polina Lemenkova}
+
+% MDPI internal command: Authors, for citation in the left column
+\AuthorCitation{Lemenkova, P.}
+% If this is a Chicago style journal: Lastname, Firstname, Firstname Lastname, and Firstname Lastname.
+
+% Affiliations / Addresses (Add [1] after \address if there is only one affiliation.)
+\address{%
+$^{1}$ \quad Université Libre de Bruxelles, École polytechnique de Bruxelles (EPB, Brussels Faculty of Engineering), Laboratory of Image Synthesis and Analysis, Building L, Campus de Solbosch CP131/3, Avenue Franklin D. Roosevelt 50, B-1050, Brussels, Belgium; polina.lemenkova@ulb.be or pauline.lemenkova@gmail.com}
+
+% Contact information of the corresponding author
+\corres{Correspondence: polina.lemenkova@ulb.be; Tel.: +32471860459 (P.L.)}
+
+% Abstract (Do not insert blank lines, i.e. \\) 
+\abstract{This paper explores spatial variability of the ten climatic variables of Mongolia in 2019: average minimal and maximal temperatures, wind speed, soil moisture, downward surface shortwave radiation (DSRAD), snow water equivalent (SWE), vapor pressure deficit, vapor pressure anomaly, monthly precipitation and Palmer Drought Severity Index (PDSI). The PDSI demonstrates the simplified soil water balance estimating relative soil moisture conditions in Mongolia. The research presents mapping of the climate datasets derived from TerraClimate open source repository of the meteorological and climate measurements in NetCDF format. The methodology presented the compiled observations of Mongolia visualized by GMT coding approach using Generic Mapping Tools (GMT) cartographic scripting toolset. The results present 10 new maps of climate data over Mongolia made using automated cartographic techniques of GMT. Spatial environmental and climate analysis, which determines relative distribution of PDSI and temperature extremes, precipitation and soil moisture, wind speed and DSRAD shown maximum at 491 mm, the DSRAD shown minimum at 40.000 Wm-2, maximum at 113.000 Wm-2 in the Gobi Desert region, SWE (up to 491 mm), VAP and VPD compared with landmass parameters represent powerful cartographic tools to address complex regional climate and environmental issues in Mongolia, a country with contrasting topography, extreme climate conditions and unique environmental setting.}
+
+% Keywords
+\keyword{Mongolia, Asia, climate, environment, cartography, GMT} 
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+\subsection{Background}
+Climate has long been recognised to play an important role in the environmental dynamics \cite{Dashkhuu}, functionality \cite{Natsagdorj,An}, variability and sustainability in various regions of the Earth \cite{SATTLER2021101620,Jiang,Lemenkova2021a,DUGERDIL2021107235}, which has been a subject of numerous studies. This especially concerns Mongolia (Fig. \ref{fig1}), a country with extreme continental climate, severe colds winters, occasional presence of permafrost and cryogenic morphostructures \cite{Dashtseren2021,Tsedevdorj2021,Blomdin} and contrasting dry summers with extremal hot temperatures. Being a country sensitive to the climate extremes and environmental impacts affecting its fragile ecosystems, Mongolia presents an example of a unique region of the Earth influenced by global environmental and climate change. Climate variables, such as temperature, precipitation and winds, have a strong effect on the environmental setting of the country well correlating with the topographic structure and the extent of the major eco-zones. 
+
+Climate change affects various aspects of vegetation: agricultural potential and crop production \cite{Otgonbayar,Lemenkova2021b,Munkhtur}, distribution and health conditions of forests \cite{Erdenebaatar,WANG2022e02034}. Besides environmental effects, climate has an impact on social processes, such as nomadic tourism in Mongolia \cite{OGORMAN2007161,BUCKLEY200847}, or distribution of nature attractions, e.g., national parks and reserves, aesthetics, quality and suitability of landscapes for visits and recreation \cite{Gantemur,Klauco2017}. Urbanisation is yet another example of climate effects, which indirectly affects the distribution and density of the population depending of basic human conditions necessary for living in Mongolia \cite{Fan,Khishigdorj,Oyunjargal}. Variations in temperature, frequency and intensity of precipitation, direction and strength of winds present more factors controlling soil moisture and quality \cite{Samdandorj}, vegetation growth and health \cite{Kolar,Lemenkova2020a,MENG2022152198} and the environmental sustainability \cite{Guo,Lemenkova2020b}. 
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_01.jpg}
+	\caption{Topographic map of Mongolia. Mapping: GMT by script available in Appendix \ref{app1}. Source: author. \label{fig1}}
+\end{figure}   
+\unskip
+
+At the same time, the two most important climate factors (temperature and precipitation) are largely influenced by the distributions of the topographic landforms and local relief over the region. Those can include notable differences in temperature regime, thermal effects from surface and precipitation patterns in the mountains \cite{LEHMKUHL201824,LEHMKUHL201212}, plateau \cite{LUO2021105505,Baoetal2015,CHEN2022108560}, steppes \cite{Zemmrich} and deserts \cite{LI2021105259,LUO201957,RAHMAN2022391,SAAVEDRA2020104711,LEI2021105661}. In turn, the key exogenous surface processes, such as for instance weathering and erosion, are especially active in the desert areas. These regions are notable for strong winds and highly specific hydrological network pattern largely controlling regional topography by sculpturing and modifying the new landforms. The examples of such phenomena can be seen both in Mongolia and in neighbouring China \cite{DAI2022115518,XU2020100496,LYU2021111488}. 
+
+Besides natural factors, such as climate and topography, the anthropogenic activities present additional aspects contributing to the environmental pressure and thus also affect environmental sustainability of the region. For instance, grazing intensity and active cattle heading may be the cause of degradation of rangelands in the mountain steppes of Mongolia \cite{Otgontuya,Khishigdorj,ADDISON201337}. In turn, modified ecosystems affect regional biodiversity and productivity, which well illustrates the sensitivity of the environment to both climate and anthropogenic forces, as reflected in papers on ecological significance \cite{Klauco2013,Lemenkova2021c,Bumtsend}. The interconnectivity between the climate, environmental and social factors, as briefly described above, well illustrates the effects of the climate fluctuations on the ecological system in Mongolia. In fact, natural and anthorogenic factors demonstrate mutual feedbacks between the geographic and climate evolution and human aspects of life \cite{YU201977,XU2021104333,TUGJAMBA2021101360}.
+
+The actuality of climate change studies is well reflected in rapid development of methods and approaches to better model and analyse the complexity of the natural processes and their sensitivity to the external factors by modelling. Methodology of climate change assessment is currently experiencing an important challenge. It includes methods of monitoring and mapping, as well as advanced approaches of data analysis \cite{FENG2020102861,WANG201768,GUO2021141481}. For example, these include long-term  climatic data and biophysical and physiological parameters of pasture grassland and cattle in Mongolia \cite{Bolortsetseg,SASAKI2022104690}; performing interviews supported by meteorological data for analysis of climate change impacts on the provisioning of key ecosystem functions as well as nomadic herders' livelihoods and pasturelands \cite{Tugjamba}; analysis of interactions between ecosystems and nomadic land-use systems in mutually-adaptive ways, for maintaining rangelands and nomadic pastures resilient and sustainable \cite{Chuluun}. 
+
+Such and other studies demonstrate how climate changes, ecosystem dynamics, and socioeconomic factors have been interacting to determine nomadic land-use systems in Mongolia. More examples include, for instance, hydrological analysis of the stream connectivity and their affect on biotic interactions such as spacies distribution, population dynamics and fragmentation of biotas in Mongolian riverine system \cite{Maasri}; integrated analysis of the recent changes in the climate regime of Mongolia using data on atmospheric events, land degradation, desertification, and sandstorms \cite{Hanetal}. Yet another example of climate related studies of Mongolia \cite{Nyamtseren} includes studying spatiotemporal variations of aridity by quantitative analysis as a major indicator for land prone to drought, degradation, and desertification.
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_02.jpg}
+	\caption{Average minimal temperature in Mongolia in April 2019. Mapping: GMT by script available in Appendix \ref{app2}. Source: author. \label{fig2}}
+\end{figure}   
+\unskip
+
+Precise and accurate visualisation of geo-information on the geometric extent of the fields, types and degree of climate hazards derived from the open geospatial high-resolution datasets can help monitoring and improving climate change prognosis and environmental risk assessment both at national and regional scales including both Mongolia and the neighbouring region of Inner Mongolia, China \cite{JIE2021353,5631071,5964785}. 
+
+\subsection{Objectives}
+The primary objective of this study is mapping of Mongolia using advanced cartographic methods of the Generic Mapping Tools (GMT) for visualization of the climate and environmental parameters. Using scripting techniques of GMT, this study presented a series of maps showing how selected climate parameters change across Mongolia with respect to the topography of the country. In such a way, the study aims to focus on the twofold aspects.
+
+The first aspect is related to climate and topographic analysis aimed to detect variations in climate parameters for environmental monitoring at a national scale. Those include average minimal and maximal temperature, wind speed, soil moisture, downward surface shortwave radiation (DSRAD), snow water equivalent (SWE), vapor pressure deficit, vapor pressure anomaly, monthly precipitation and Palmer Drought Severity Index (PDSI). Thus, this paper explores spatial variability and performance of these climatic variables in Mongolia for the period of 2019 using TerraClimate dataset.
+
+The second aspect concerns technical issues of the cartographic methods using GMT that affect methods of data processing and visualisation. Specifically, this includes GMT scripting syntax and proper selection of technical mapping parameters for optimal cartographic representation of spatial phenomena and data modelling. Using effective and advanced cartographic data processing, it becomes possible to better highlight distribution of the geographic and environmental phenomena, for instance, the geomorphology of the country, with effects of the terrain steepness and elevation, by selecting correct color scheme, hydrologic network density and thematic variables.
+
+To this end, the study has the following aims:     
+
+\begin{itemize}
+	\item to perform data capture, collecting, formatting, storage and processing (environmental and climate data, GEBCO and descriptive data sources);
+	\item to test, evaluate and implement script-based technical methods of geospatial data analysis by GMT;
+	\item	to estimate the utilisation of the script-based data processing in cartography for spatial data processing for semi-automatic mapping of raster data using various GMT modules;
+	\item	to perform comparative spatial analysis of the environmental factors in Mongolia;
+	\item	to present regional climate variability by showing maps on the regions where the extremes in climate variables are the most notable due to the contrasting topography: major mountain ranges of the Altai, Khangai and Khentii, Central Mongolia, northern riverine network (Selenga River with tributaries) as well as the Gobi Desert region;
+	\item to analyse climate and environmental setting in Mongolia using both presented maps and data available from literature sources.
+\end{itemize}
+
+In such a way, this research presents a compilation of the visualized climate and environmental data based on the TerraClimate open source repository. The data show measurements of the meteorological and climate global data in the NetCDF format. The methodology applied the compiled data observations over Mongolia and visualized experimental meteorological data using GMT \cite{Wesseletal2019}. 
+
+The study presented a series of the eleven new maps (ten climate maps and a topographic map) made using scripting techniques of GMT, applied in the existing cartographic studies \cite{Lemenkova2019a,Kasalica,Lemenkova2021d,Spinellis,Lemenkova2021e,Virden}. Full GMT scripts used for plotting these maps are available in the Appendices with provided live-links to the corresponding maps for repeatability of these techniques in similar cartographic tasks in relevant studies and as a technical reference.
+
+To better understand driving factors affecting the environment of Mongolia, the study goal was to highlight regional variations in climate and environmental variables of this country well correlating with its complex and diversified topography. To do this, a series of maps has been created using GMT aimed to demonstrate certain correlation between the topographic and climate factors that contribute to the environmental sustainability of Mongolia. Variations in different climate parameters, described above, were evaluated over the topographic landforms of Mongolia, by comparing maps showing the distribution of the continuous fields of climate variables. As a result, the study illustrated how climate variability in various ecological zones of Mongolia is strongly affected by its complex topography that varies notably in different regions of the country: high-mountain areas \cite{UNKELBACH2021100073,UNKELBACH2021107076}, semi-arid mountainous steppe and shrublands \cite{Minderlein}, deserts and semi-deserts, steppes, grasslands \cite{WANG2022108783,LIU2021108567}, taiga forests \cite{GRADEL201724,DULAMSUREN2005376} and alpine regions \cite{KLINGE2022108113}. 
+
+Besides, the paper discussed the actuality of the advanced scripting methods in contemporary cartography. Scripts enable robust and rapid visualisation of the data, especially in case of mapping large datasets, which presents a significant advantage compared to conventional mapping routine. This is different from the existing numerous applications of GIS \cite{FAN201696,TSUTSUMIDA2015196,Lemenkova2020c,Amarsaikhan,NAKAYAMA2021109404,Lemenkova2020d,PARK2019103630,OSULLIVAN2019101979}. For instance, compared to the scripting mapping, traditional mapping is largely based on the GUI-based approach \cite{Tuvshin,Lemenkova2020e,Lemenkova2021f,HOLGUIN2018137}. 
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_03.jpg}
+	\caption{Average max. temperature in Mongolia for April 2019. Mapping: GMT by script available in Appendix \ref{app3}. Source: author. \label{fig3}}
+\end{figure}   
+\unskip
+
+However, scripts clearly surpass the traditional ways of mapping in terms of automatisation, speed of data processing and aesthetic quality of maps. At the same time, increasing variability and amount of data requires fast and reliable techniques of their processing, modelling and visualisation. This sets up a need to actualise, update and increase the quantity and quality of the existing maps of Mongolia using high-resolution thematic data and advanced cartographic approaches. Such a task requires advanced, machine-based effective methods with minimised handmade routine for speedy and comprehensive thematic mapping. Some existing examples of such automatisation in cartography can be illustrated by using scripting tools: GRASS GIS \cite{FRIGERI20111265,Lemenkova2020f}, GMT \cite{5369602,Lemenkova2021g,BECKER20051075,Lemenkova2021h,OKUBO200459}, R \cite{Tserenpurev,Lemenkova2019b}, QGIS \cite{FANG202031,Lemenkova2020i}. This study seeks to contribute to these attempts and continue methodological development of modern cartography by presenting maps of Mongolia.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Materials and Methods}
+
+\subsection{General approach}
+
+\subsubsection{Data}
+The study is based on the integration of the open source high-resolution geospatial data. These were obtained from the TerraClimate and GEBCO as crucial sources of information in climate and environmental domains. The materials used in this study include open source data. Specifically, the data include two data sources: 1) TerraClimate, a publicly available global climate dataset in a raster NetCDF format (\href{https://climate.northwestknowledge.net/TERRACLIMATE/index_directDownloads.php}{TerraClimate}), originally developed by \cite{Abatzoglou} and updated on a regular basis; 2) GEBCO, processed for topographic mapping of Mongolia, \href{https://www.gebco.net/data_and_products/gridded_bathymetry_data/}{GEBCO}. The TerraClimate dataset can be used for other periods since 1958 up to now aimed both at retrospective mapping and for estimating mapping proposing prognosis of future scenarios in climate change. Visualisation of such data enables to highlight changes in continuous fields based on the analysis of correlation between the isolines and correspondence of the extremal values. 
+
+\subsubsection{Software}
+The GMT is a major technical tool for script-based mapping with advanced functionality and methods of cartographic data handling. The choice of the cartographic tool GMT for data processing is explained by its scripting language that enables to process large volumes of data rapidly and effectively. The production of the geospatial data has been increasing continuously in volume worldwide which is mostly associated with an increase in velocity of data generation and variety of formats. The onset of the large spatial data era results in challenges of processing these data, which can only be done using semi-automated methods, such as GMT scripting, enabling to rapidly exploit large amounts of spatial information. 
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_04.jpg}
+	\caption{Wind speed in Mongolia in 2019. Mapping: GMT by script available in Appendix \ref{app4}. Source: author. \label{fig4}}
+\end{figure}   
+\unskip
+
+Therefore, scripting techniques of GMT are used in this study to process high-precision spatial data for environmental, topographic and climate mapping of Mongolia. Data analysis is based on the process of extracting information by interpreting variables using features visualized by cartographic approaches. Specifically, these include adjustments of color, geometric structure and patterns of changed variables as continuous phenomena corresponding to the terrain relief and interpreting the retrieved information from the data for environmental analysis. Due to its embedded scripting language, GMT enables effective data processing and visualisation of raster files in large spatial and temporal scales, which is also an actual task for climate and environmental monitoring in real time regime, for instance by comparison data for multiple years. The algorithms of GMT-based scripting propose the advanced ways of such tasks enabling spatial data processing, computer vision and automated plotting. This explains the choice of the data and the scripting toolset GMT selected for this study.
+
+\subsection{Technical workflow}
+The topographic mapping (Fig. \ref{fig1}) was based on the General Bathymetric Chart of the Oceans (GEBCO) grid \cite{Schenke2016}, which aggregates the SRTM data for the terrestrial areas at 15 arc-second (ca. 450 m) resolution. Other maps (Fig. \ref{fig2} to \ref{fig11}) were plotted using TerraClimate raster climate datasets. 
+
+The GMT module ‘grdcut’ was applied to clip the region of the country from the global grid using the following code: ‘gmt grdcut GEBCO\_2019.nc -R87.5/120/41.5/52.5 -Gmn\_relief.nc’ where the ‘-R’ flag controls the coordinates of the study area in WESN convention (87.5°–120°E, 41.5°–52.5°N). The application of the module ‘psclip’ generates a selection of the study area using the DCW contour of the country, which was defined by the following code: ‘gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> \$ps’. The river hydrological network was visualized using the ‘pscoast’ module: ‘gmt pscoast -R -J -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> \$ps’.  	
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_05.jpg}
+	\caption{Soil moisture in Mongolia in 2019. Mapping: GMT by script available in Appendix \ref{app5}. Source: author. \label{fig5}}
+\end{figure}   
+\unskip
+
+The isolines on the temperature maps (Fig. \ref{fig2} and Fig. \ref{fig3}) were modelled using the ‘grdcontour’ module of GMT: 'gmt grdcontour mn\_tmin.nc -R -J -C2 -A2+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> \$ps'. Here the '-A' flag explains the annotations plotted every 2nd line with ascertained transparency as reported in the existing works \cite{Lemenkova2020j}. 
+
+The texts were added by the 'pstext' module using the following GMT expression: \\ 'gmt pstext -R -J -N -O -K -F+jTL+f9p,26,blue2+jLB -Gwhite@60 >> \$ps << EOF 92.3 50.1 Uvs Nuur EOF', where the actually printed expression is defined between the coordinates in decimal system and the returned ‘EOF’ signal. The visualisation was made using the 'makecpt' module: 'gmt makecpt -Cjet -T-43/-16/0.5 > pauline.cpt' and set up for 'jet' color table for the both figures (Fig. \ref{fig2} and \ref{fig3}) for comparability. Here the ‘-43/-16/0.5’ flag provides the range of data and the step of the interval in color visualization.   
+
+Fig. \ref{fig4} showing the wind speed in m/s was plotted using the wind speed data from the TerraClimate: ‘gmt grdcut TerraClimate\_ws\_2018.nc -R87.5/120/41.5/52.5 -Gmn\_wind.nc’. The surrounding area was set transparent using the ‘-t100’ flag to focus on the study area. The cartographic ticks have been visualized using flag ‘-Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5’, which signifies that major latitude and longitude lines are plotted every 10°, text label annotations are plotted every 2.5° and minor ticks are plotted every 5°, respectively
+
+The soil moisture map in Fig. \ref{fig5} has been visualized using the colormap 'sky-18' developed by Rafi at GraphicsFuel with the data extent 0/40. The conversion of the PostScript file to the JPG image file was made using the GhostScript as follows: ‘gmt psconvert MN\_soil.ps -A0.5c -E720 -Tj -Z’. Here the ‘-E’ flag shows the output resolution of the file (here: 720 dpi) and the ‘-A’ flag gives the image margins (here: 0.5 cm) and ‘-T’ stands for the file format definition (here: JPG). 	
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_06.jpg}
+	\caption{Downward surface shortwave radiation in Mongolia in 2019. Mapping: GMT by script available in Appendix \ref{app6}. Source: author. \label{fig6}}
+\end{figure}   
+\unskip
+
+Similarly, the downward surface shortwave radiation (DSR) was visualized for the year 2019 in Mongolia, as shown in Fig. \ref{fig6}. The DSR was mapped using the specific data of the TerraClimate estimated of the total amount of shortwave radiation (both direct and diffuse) that reaches the Earth's surface (average values was $77 Wm^{-2}$) for Mongolia. The model was visualized using colormap '22 hue sat value2' adopted from the color tables of IDL KST by Python with the data range from $-40 Wm^{-2}$ to $113 Wm^{-2}$. The information regarding the coordinate projection was added by the following code: ‘-Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f’. The methods of estimation of the original DSR grids use the remote sensing approach which is based on evaluating the signals received from spectral channels in visible and Near Infra-Red (NIR), plus the data on the albedo and atmospheric composition used for calculation of the DSR at the terrain surface.  
+
+The Snow Water Equivalent (SWE) at end of month in Mongolia in 2019 (Fig. \ref{fig7}) was determined by visualising the grid using the ‘grdimage’ module as follows : ’gmt grdimage mn\_swe.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> \$ps’ as described in existing papers \cite{Lemenkova2020l}, and adding isolines by the ‘grdcontour’ module: ‘gmt grdcontour mn\_swe.nc -R -J -C50 -A50+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> \$ps’. Furthermore, the data range was also determined by the GDAL utility ‘gdalinfo’: ‘gdalinfo -stats mn\_swe.nc’, which shown the thresholds in data used for adjusting the Color Palette Table (cpt) based on the identified data extremities (here: up to 491). Methodologically, the SWE depicts the estimated snowpack measurement showing the amount of water contained within the snowpack over the country.
+
+The Vapor Pressure Deficit (VPD) in Mongolia (Fig. \ref{fig8}) was estimated using the difference between the calculated atmosphere moisture and the air capacity to contain the moisture if saturated. As such, it utilised the information on the greenhouse air temperature, relative humidity and canopy air temperature. The VPD has correlations with crop transpiration and climate factors, such as warming, water shortage and drying of atmosphere \cite{Ghanem,Lietal2021,Song}. 
+
+The Vapor Pressure (VAP) in Mongolia shown in Fig. \ref{fig9} is represented using the advanced computation approach based on the equation computing VAP as the pressure from a vapor in thermodynamic equilibrium with solid or liquid phases. Since VAP is the atmospheric pressure exerted by water vapor, it is a method of measuring the humidity of the air and may indicate environmental setting in the country suitable or unsuitable for crop planting and agricultural activities. The visualization of VAP map has been performed using the colormap 'f-33-13-10' by the Gnuplot pm3d CPT which was developed as a scale by P. Mikulík (data range here is from 0 to 4.6 for an RGB CPT). 
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_07.jpg}
+	\caption{Snow water equivalent in Mongolia in 2019. Mapping: GMT by script available in Appendix \ref{app7}. Source: author. \label{fig7}}
+\end{figure}   
+\unskip
+
+The precipitation map (Fig. \ref{fig10}) accounts for a monthly data from the TerraClimate as of 2019 tabulated in NetCDF format and plotted using similar GMT techniques. The grid annotations were defined using the flag 'FORMAT\_GEO\_MAP=ddd:mm:ssF' which controls general map formatting in the ‘psbasemap’ module of GMT. The Palmer Drought Severity Index (PDSI) is visualized in Fig. \ref{fig11} as a function of temperature and precipitation. The PDSI is nowadays a widely accepted in climatology index originally developed by the American meteorologist Wayne Palmer \cite{Palmer1965}. It demonstrates a simplified soil water balance estimating relative soil moisture conditions. Although normally it differs from -10 (very dry) to +10 (extreme wet), the actual data may vary regionally. Thus, for the case of Mongilia in 2019, the PDSI data ranged from minimum=-8.100 to maximum=5.800, with mean=-0.626 and SD=2.041, according to the data inspection by GDAL (gdlainfo).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results}
+
+Climate input datasets from the TerraClimate have been visualized using the methodology described in previous section. All the maps were plotted using the identical cartographic setting for comparability reasons: American Polyconic projection. This implies, for instance, that the observed variations of temperatures, soils moisture, PDSI, wind force and climate water deficit showing soils quality were compared within the area of Mongolia suitable for overlay. The visualized grids were compared to observe the specific ranges of climate variables by analysing the respective values using relevant maps.
+
+The topographic map of Mongolia (sourced from \cite{GEBCO}) was visualized for the clipped region of the country using ‘wiki-schwarzwald-d050 cpt’. The GEBCO is widely used due to the unprecedentedly high resolution, reliability and precision \cite{Liuetal2019,Nock,Lemenkova2020m,Saito}. 
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_08.jpg}
+	\caption{Vapor pressure deficit in Mongolia in 2019. Mapping: GMT by script available in Appendix \ref{app8}. Source: author. \label{fig8}}
+\end{figure}   
+\unskip
+
+The inspected data range shows the highest point at Khüiten Peak (4,374 m) in the SW of the country on the border with China in the Altai Range, the topographic mean is 1319.129 m, SD is 571.535 m, according to GDAL. 
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_09.jpg}
+	\caption{Vapor pressure anomaly in Mongolia in 2019. Mapping: GMT by script available in Appendix \ref{app9}. Source: author. \label{fig9}}
+\end{figure}   
+\unskip
+
+The minimal temperatures in Mongolia for the April 2019 (Fig. \ref{fig2}) were identified as minimum=-43.0°C, maximum=-16.1°C, mean=-27.088°C, StdDev=4.858°C based on the TerraClimate data. The coldest region is noted as surroundings of the Uus Nuur and Tes River in the NW of the country. The maximal temperatures for April 2019 (Fig. \ref{fig3}) demonstrated the following results: minimum=-32.1°C, maximum=1.0°C, mean=-15.443°C, StdDev=4.977 °C. The data range for the wind speed (Fig. \ref{fig4}) shown following results: minimum=0.0 m/s, maximum=4.6m/s, Mean=2.019m/s, StdDev=1.031 m/s. The wind demonstrates the highest values in the Gobi Desert region in the SE and the eastern region of the country (Choibalsan region) which well corresponds with the levelled topography of these regions. In contrast, the lowest values of the wind speed are notable in the NW of the country around the cities Khovd, \"Olgii and Ulaangom, as well as in the Altai Mountains.
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_10.jpg}
+	\caption{Monthly precipitation in Mongolia in 2019. Mapping: GMT by script available in Appendix \ref{app10}. Source: author. \label{fig10}}
+\end{figure}   
+\unskip
+
+The soil moisture in Mongolia (Fig. \ref{fig5}) volumetric water content in the soils of Mongolia with the following data range: from 0 to the maximum values at $155.0 cm^3/cm^3$, with mean at $6.393 cm3/cm^3$ and SD at $13.850 cm^3/cm^3$. The highest values are notable in the northern regions of the country around the cities Mörön, Erdenet, Ulaanbaatar, as well as in central regions around Bayankhongor and Arvaikheer. The notably high values of the soil are clearly correspond to the river valleys and lakes (Selenge, Khövsgöl, Kherlen, Onon) while the lowest values close to zero are visible in the southern region of the Gobi Desert. 
+
+The inspection of the results on downward surface shortwave radiation (DSRAD) in Mongolia in 2019 (Fig. \ref{fig6}) shows the following outputs: the statistical data range is from minimum=$40.0 Wm^{-2}$ to a maximum=$113.0 Wm^{-2}$, mean=$77.007 Wm^{-2}$, StdDev=$15.877 Wm^{-2}$. The general trend in the data distribution demonstrates a clearly NS direction with highest values corresponding the southern regions (Gobi Desert and surroundings) while the lowest values are in the north of the country (Khövsgöl, Selenga River valley and its tributaries, Onon River, Uvs Nuur).
+
+The Snow Water Equivalent (SWE) shown in Fig. \ref{fig7}. demonstrated the statistical analysis as follows: data varies from the minimum=0 to the maximum=491.0 mm, mean=16.552 mm, SD=21.985 mm. Variation of the data shows a correlation with the topography of the region with increased values in the regions of the Khangai Mts, Altai Mts and in the north. In contrast, the lowest values are notable in southern and SE regions of Mongolia. The Vapor Pressure Deficit (VPD) in the country is shown in Fig. \ref{fig8}. For the VPD, the southern regions of the country ranked as a ‘very high’ level of deficit with values of 0.16 to 0.18 (colored cyan to blue in Fig. \ref{fig9}), while northern and selected central regions (Uvs Nuur, Ulaangom) are identified as the ‘low’ level (values -0.02 to 0.02, colored red in Fig. \ref{fig9}). 
+
+\begin{figure}[H]\centering
+	\includegraphics[width=14.0 cm]{Fig_11.jpg}
+	\caption{Palmer Drought Severity Index (PDSI) in Mongolia in 2019. Mapping: GMT by script available in Appendix \ref{app11}. Source: author. \label{fig11}}
+\end{figure}   
+\unskip
+
+The rest of the country has values varied according to the topography and local climate settings. For example, the Vapor Pressure (VAP) anomaly over Mongolia shows a clearly visible negative values in the northernmost areas of the country around the Tsetserleg city (Fig. \ref{fig9}). General data range shows the following values: Minimum=0.020 hPa, Maximum=0.190 hPa, Mean=0.085 hPa, StdDev=0.027 hPa, where variations in values demonstrate a general trend of increase towards the southern regions of Mongolia. 
+
+Monthly precipitation in Mongolia in 2019 (Fig. \ref{fig10}) was identified as at high levels in central regions with a general data range from minimum=0.0 to a maximum of 28.0 mm, a mean at 3.182 mm, and a standard deviation (StdDev) at 2.744 mm. 
+
+The map was visualized using ‘saga-22’ cpt adopted from the SAGA open source GIS. Finally, the Palmer Drought Severity Index (PDSI) in Mongolia calculated and visualized for 2019 shown the following data range: general data range from -7 to +5 from very dry levels to the extreme wet values showing very dry values in the Gobi Desert while more wet and moist regions in the mountain ranges of the Altai and forests. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Discussion}
+\subsection{Perspectives of the script-based techniques in cartography}
+
+The use of open source data mapped using advanced script-based methods enables to further asses the links between the topography, environment and climate parameters. For example, analysis of maps enables to detect correlations and impact factors, to asses the performance of environmental variables with regard to the topographic effects. Such an in-depth analysis requires an extra evaluation of environmental and topographic variables, which is possible using high-quality maps. Traditional GIS methods are less effective: labor-intensive, time-consuming and not precise. In contrast, GMT provides a new way of data processing through increased automation, rapid plotting, enhanced functionality and refined solutions of cartographic design. Besides, its benefits include rapid and seamless data conversion, very high speed of raw data processing and accuracy of mapping. 
+
+This study presented a script-based mapping of the climate and environmental data covering Mongolia. The cartographic technical approach of this study is based on scripting processing supported by the advanced GMT techniques by presented scripts. The study applied the existing datasets available from GEBCO and TerraClimate for climate and environmental monitoring using data for 2019. In this way, the presented series of maps contributed to the general goals on maintaining analysis of the sustainable development, environmental and biodiversity protection and climate mitigation in Mongolia. At present, applications of scripts in cartography in climate and environmental mapping of central Asian countries with sensitive climate conditions are still being developed. 
+
+This research contributed to the increase of such applications by presenting an integration of the environmental and climate data from climate monitoring survey and automated cartographic data processing by scripting algorithms of GMT for high-quality mapping. Specific tasks in cartographic workflow using GMT scripting included accurate techniques of map plotting and visualising various elements on the map by lines of the code, as demonstrated in the presented codes. The computer-based semi-automated data processing in cartography using algorithms of GMT scripting significantly facilitated and improved technical workflow of such tasks compared to the traditional GIS which remains a tedious handmade routine. 
+
+The advantages of using open geospatial data, such as TerraClimate and GEBCO, for climate and environmental monitoring consist in the effectiveness of data analysis. Visualising open datasets enables a contactless approach to the remotely located, hardly reachable regions, such as Altai Mountains or Mongolia Gobi Desert \cite{HEINER202078}. Using open source data processed by automated methods of scripting may further improve developing a system of detecting droughts and monitoring environmental setting visualized as a series of thematic maps. Such activities can prevent climate and environmental hazards by preventive risk assessment achieved through accurate data visualising and prognosis. In such a way, environmental and climate monitoring reduces the need for fieldwork in the remotely located and data-scarce areas with restricted access.
+
+\subsection{Cartographic perspectives in environmental analysis}
+The development of the advanced climate monitoring of Mongolia is possible based on regular visualisation of the high-resolution data created as a series of maps. Discrimination of variations of climate variables using maps visualising climate data which enables to detect and separate regions with lower and higher temperatures. The maps contributed to the risk assessment of droughts through visualising data on DSRAD, VAP and VPD and soil water balance. Estimating relative soil moisture in Gobi Desert and other arid regions of the country was compared to the plains and mountainous regions. 
+
+Moreover, topographic and climate mapping using scripting GMT methods and open geospatial data for environmental analysis and monitoring fits to the increase of digitalisation and visualisation of data for sustainable agriculture, since it strongly depends on regional climate and topographic setting of the country. In principle, the strategy of regular cartographic mapping of any country and region, including Mongolia, aims at the increase of knowledge. This consists in smart environmental and climate monitoring system based on the available datasets for sustainable ecosystems, identification of climate hazards, analysis of biodiversity and vegetation mapping in Mongolia. The integration of various datasets into the inter-disciplinary projects on environmental and climate monitoring of Mongolia ensures the dissemination of results of climate change in various regions of the country. This study presented a contribution to such projects and tasks through the presented geospatial analysis of climate and environmental setting of Mongolia.
+
+Actual and regular updates of mapping help to increase the control on possible drought distribution and climate characteristics, such as temperature, vapour, snow water equivalent, and the like. The study aimed to the development and maintaining of agricultural monitoring system in Mongolia or Inner Mongolia (China), following the existing studies \cite{Rina,Long,Zheng}. In such a way, the extended study can reach the goal to increase environmental monitoring of Mongolia using maps made by GMT.
+
+To contribute to these goals, this research presented 11 new maps made using linking technical cartographic approach of robust data visualisation using GMT. The outcomes aimed to support the implementation of the precise climate and environmental monitoring of Mongolia. Thus, it contributed to the development of actual non-destructive environmental monitoring systems based on the cartographic analysis in previous studies of Mongolia and neighbouring regions \cite{MENG2021107908,DASHPUREV2021108331,SAINNEMEKH2022104654,Batunacun}. 
+
+\subsection{Outlook and future developments}
+As a recommendation for future studies, the analysis of multi-temporal changes in climate and environmental setting of the country would be beneficial using datasets taken for various periods of years. Spatio-temporal multi-source data analysis supports comprehensive environmental and climate analysis of Mongolia in real-time regime, which can be applied for agriculture and crop management support systems. Besides, overlapping historical archive climate and environmental data with actual data using computer vision techniques and algorithms of \hl{script-based} mapping, can enable to perform a retrospective times-series analysis for predictive mapping and agricultural prognosis of Mongolia. Thus, the semi-automated mapping by GMT can be applied in a real-time regime for environmental and climate monitoring using time series analysis.  
+
+Furthermore, the presented map series contribute to the data analysis in agricultural sector of Mongolia and international community of the Central Asian studies. For example, environmental variables mapped in this study, such as soil moisture, temperature variability, PDSI, can be considered for agricultural analysis: to estimate crop responses and sensitivity to climate changes in Mongolia. The thematic maps plotted in identical projection and spatial extent enabled to demonstrate topographic and climate data from the multi-disciplinary sources. This contributes to the development of the data-based solutions for agricultural monitoring of Mongolia through the visualisation of regional climate and topographic setting and support of the adaptive crop management. 
+
+Additional data may also include very detailed high-resolution weather data on precipitation, wind, air temperature and soil moisture maps on a weekly basis. Supported by such data, an extended research may also include using satellite images to allow deeper insights into the crop identification and plant health monitoring for smart agriculture in Mogolia. This would contribute to the strategy on environment, biodiversity and agricultural protection and climate mitigation on a national scale in Mogolia. Acquiring new knowledge on sustainable development and environmental monitoring of Mongolia is largely based on using high-quality maps.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusions}
+
+To address the problem of modern cartographic data processing in physical geography, this study demonstrated the use of the GMT scripting toolset for script-based mapping. The GMT-based scripting approach of climate mapping, presented in this study with a case of Mongolia, provides both a qualitative and a quantitative basis for visualising areas of notable climate variations to target for high-resolution environmental and climate mapping. The application of script-based mapping in cartography presented by a case of GMT, was specifically used to process several raster data of TerraClimate having global coverage. 
+
+The visualized datasets illustrated the impact of local and regional topography in Mongolia on a national scale. Specifically, this study analysed such variables as wind speed and radiation, min/max temperatures, wind speed, soil moisture dynamics, distribution of DSRAD, SWE, VPD and VAP, monthly precipitation and PDSI. The comparative analysis for climate data based on the eleven new maps plotted in identical cartographic projection (American polyconic) provided a cartographic approach for visualisation of the spatiotemporal climate and environmental data for Mongolia. Climate variables are mapped within special areas: Gobi, Altai, Khentii, Khangai, basins of major rivers (Selenga, Onon, Kherlen, and Tes), Central Mongolia with the Ulaanbaatar, and the eastern region of Choibalsan.
+
+The study revealed a variation of the continuous fields in climate variables which well corresponds to the complex topographic and hydrologic setting of the country. In such a way, this paper determined geospatial variability of climate and topographic factors that influenced regional environmental diversity for Mongolia. The results distinguished variations in climate parameters caused by the distribution of the landmasses in mountain ranges of Altai, Khangai and Khentii, distinct from the regions of northern Mongolia with dense hydrologic network, central Mongolia around Ulaanbaatar, eastern region, steppes, semi-deserts and Gobi Desert, which continues existing studies \cite{Cook,Ulaankhuu}. 
+
+Technical implementation of the thematic maps consists in scripting algorithms of GMT by various modules and consecutive iteration of codes, as explained in Methodology. The script-based data processing applied in various geoscience application \cite{Lemenkova2019c,Lemenkov2021} demonstrated effectiveness and automation of data analysis, modelling and visualisation. In this study the script-based mapping by GMT was applied to reduce the workload of visualisation through the increased automation in the cartographic workflow. Scripts used for cartographic tasks were tested by GMT for processing of raster TerraClimate dataset aimed at detailed geographical analysis of Mongolia. Spatial environmental and climate analysis determined relative distribution of the PDSI and temperature extremes, precipitation and soil moisture, wind speed and DSRAD, SWE, VAP and VPD compared with landmass parameters. It represented a powerful cartographic tools to address complex regional climate and environmental issues in Mongolia, a country with contrasting topography, extreme climate conditions and unique environmental setting. 
+
+Future applications of this study include detailed analysis of the presented maps for understanding the reasons of climate and environmental variations in Mongolia. Besides, they show correlations of the environmental factors with the contrasting topography of the country. Presented series of maps can assist in developing regional environmental studies of Mongolia and broadens understanding of the environmental and climate spatial diversity in various regions of the country \cite{MAS,Pfeiffer} by continuing existing studies \cite{Altanbold,Jamyansuren,Jugder}. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Optional
+\abbreviations{Abbreviations}{
+\noindent 
+\begin{tabular}{@{}ll}
+CPT & Color Palette Table \\
+DCW & Digital Chart of the World \\
+DSRAD & Downward Surface Shortwave Radiation \\
+EOF & End of File \\
+GEBCO & General Bathymetric Chart of the Oceans \\
+GDAL & Geospatial Data Abstraction Library \\
+GIS & Geographic Information System \\
+GMT & Generic Mapping Tools \\
+GRASS GIS & Geographic Resources Analysis Support System GIS \\
+GUI & Graphical User Interface \\
+IDL & Interactive Data Language \\
+NetCDF & Network Common Data Form \\
+PDSI & Palmer Drought Severity Index \\
+QGIS & Quantum GIS \\
+SAGA GIS & System for Automated Geoscientific Analyses GIS \\
+SD & Standard Deviation \\
+SWE & Snow Water Equivalent \\
+VPD & Vapor Pressure Deficit \\
+VAP & Vapor Pressure \\
+\end{tabular}}
+
+\section{Data Availability Statement}
+    Yes, the GMT codes are available on the \href{https://github.com/paulinelemenkova/Mapping_Mongolia_GMT}{GitHub}
+    
+\conflictsofinterest{The author declares no conflict of interest.} 
+
+\acknowledgments{I express my sincere gratitude to the Editors of \emph{Geosciences (Switzerland)} MDPI for giving me an opportunity to publish this article upon invitation under special conditions. I am also thankful to the three anonymous reviewers for careful reading of this paper and providing useful suggestions, remarks and critical comments that improved the earlier draft of this manuscript.}
+
+%\newpage
+\appendixtitles{yes} % Leave argument "no" if all appendix headings stay EMPTY (then no dot is printed after "Appendix A"). If the appendix sections contain a heading then change the argument to "yes".
+\appendixstart
+\appendix
+\section[\appendixname~\thesection]{GMT scripts for topographic map}
+\subsection[\appendixname~\thesubsection]{GMT script for topographic map, Fig. \ref{fig1}}\label{app1}
+
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig1}]
+#!/bin/sh
+# Purpose: shaded relief grid raster map from the GEBCO 15 arc sec global data set (here: Mongolia)
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+# GMT set up
+gmt set FORMAT_GEO_MAP=dddF \
+    MAP_FRAME_PEN=dimgray \
+    MAP_FRAME_WIDTH=0.1c \
+    MAP_TITLE_OFFSET=1c \
+    MAP_ANNOT_OFFSET=0.1c \
+    MAP_TICK_PEN_PRIMARY=thinner,dimgray \
+    MAP_GRID_PEN_PRIMARY=thin,white \
+    MAP_GRID_PEN_SECONDARY=thinnest,white \
+    FONT_TITLE=12p,Palatino-Roman,black \
+    FONT_ANNOT_PRIMARY=7p,0,dimgray \
+    FONT_LABEL=7p,0,dimgray \
+# Overwrite defaults of GMT
+gmtdefaults -D > .gmtdefaults
+# Extract a subset of ETOPO1m for the study area
+gmt grdcut GEBCO_2019.nc -R87.5/120/41.5/52.5 -Gmn_relief.nc
+# check up data extent by GDAL
+gdalinfo -stats mn_relief.nc
+# Minimum=-155.000, Maximum=4848.000, Mean=1319.129, StdDev=571.535
+# Make color palette
+gmt makecpt -Cwiki-schwarzwald-d050 -V -T500/4400 > pauline.cpt
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i  -Dh -M -EMN > Mongolia.txt
+ps=Topo_MN.ps
+# Make background transparent image
+gmt grdimage mn_relief.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i  -I+a15+ne0.75 -t100 -Xc -P -K > $ps  
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i  Mongolia.txt -O -K >> $ps
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_relief.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i  -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_relief.nc -R -J -C500 -Wthinnest,darkbrown -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+#gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps   
+# Add color legend
+gmt psscale -Dg87.2/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    --FONT_LABEL=8p,0,black \
+    --FONT_ANNOT_PRIMARY=7p,0,black \
+    --FONT_TITLE=6p,0,black \
+    -Bg500f50a500+l"Colormap: 'wiki-schwarzwald-d050' elevation scale by Wikimedia Commons free media repository [R=0/4906 C=RGB]" \
+    -I0.2 -By+lm -O -K >> $ps
+# scheme for maps of North Rhine-Westphalia by Wikipedia contributor TUBS.
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    --FORMAT_GEO_MAP=ddd:mm:ssF \
+    --MAP_GRID_PEN_PRIMARY=thinner,grey \
+    --MAP_GRID_PEN_SECONDARY=thinnest,grey \
+    -Bpxg10f5a5 -Bpyg10f5a5 -Bsxg5 -Bsyg5 \
+    --MAP_TITLE_OFFSET=0.9c \
+    --FONT_ANNOT_PRIMARY=8p,0,black \
+    --FONT_LABEL=8p,25,black \
+    --FONT_TITLE=14p,25,black \
+    -B+t"Topographic map of Mongolia" -O -K >> $ps 
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    --FONT_LABEL=8p,0,black \
+    --FONT_ANNOT_PRIMARY=8p,0,black \
+    --MAP_TITLE_OFFSET=0.1c \
+    --MAP_ANNOT_OFFSET=0.1c \
+    --MAP_LABEL_OFFSET=0.1c \
+    -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+# Texts
+# Hydrology
+gmt pstext -R -J -N -O -K \
+-F+jTL+f9p,26,blue2+jLB -Gwhite@60 >> $ps << EOF
+92.3 50.1 Uvs Nuur
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f9p,26,blue2+jLB >> $ps << EOF
+93.3 48.1 Khyargas
+93.3 47.7 Nuur
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f10p,26,blue2+jLB+a-340 -Gwhite@60 >> $ps << EOF
+103.5 49.63 Selenga
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f10p,26,blue2+jLB+a-335 -Gwhite@60 >> $ps << EOF
+110.3 47.4 Kherlen
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f10p,26,blue2+jLB+a-330 -Gwhite@60 >> $ps << EOF
+110.5 48.7 Onon
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f10p,26,blue2+jLB+a-45 -Gwhite@60 >> $ps << EOF
+93.06 49.47 Tes
+EOF
+#
+# Mts
+gmt pstext -R -J -N -O -K \
+-F+jTL+f11p,26,white+jLB+a-55  >> $ps << EOF
+89.0 48.6  A  l  t  a  i   M  t  s
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f11p,26,white+jLB+a-30 >> $ps << EOF
+96.3 48.0 Khangai Mts
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f10p,26,white+jLB+a-315 >> $ps << EOF
+107.3 47.3 Khentii Mts
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f11p,26,black+jLB+a-330  >> $ps << EOF
+105.1 42.0 G o b i  D e s e r t
+EOF
+# Cities
+gmt pstext -R -J -N -O -K \
+-F+f9p,0,black+jLB -Gwhite@40 >> $ps << EOF
+103.70 48.20 Ulaanbaatar
+EOF
+gmt psxy -R -J -Ss -W0.5p -Gred -O -K << EOF >> $ps
+106.92 47.92 0.30c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,black+jLB -Gwhite@40 >> $ps << EOF
+104.20 49.10 Erdenet
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+104.04 49.02 0.20c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,black+jLB -Gwhite@40 >> $ps << EOF
+106.10 49.50 Darkhan
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+105.95 49.46 0.20c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,black+jLB -Gwhite@30 >> $ps << EOF
+112.70 47.63 Choibalsan
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+114.53 48.07 0.20c
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+100.15 49.63 0.20c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f9p,0,yellow+jLB >> $ps << EOF
+91.40 48.15 Khovd
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+91.64 48.00 0.20c
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+89.97 48.96 0.20c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f9p,0,yellow+jLB >> $ps << EOF
+100.90 45.80 Bayankhongor
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+100.72 46.19 0.20c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f9p,0,yellow+jLB >> $ps << EOF
+102.93 46.36 Arvaikheer
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+102.77 46.26 0.20c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f9p,0,black+jLB -Gwhite@40 >> $ps << EOF
+89.15 50.10 Ulaangom
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+92.06 49.98 0.20c
+EOF
+# insert map
+# Countries codes: ISO 3166-1 alpha-2. Continent codes AF (Africa), AN (Antarctica), AS (Asia), EU (Europe), OC (Oceania), NA (North America), or SA (South America). -EEU+ggrey
+gmt psbasemap -R -J -O -K -DjBR+w2.8c+stmp >> $ps
+read x0 y0 w h < tmp
+gmt pscoast --MAP_GRID_PEN_PRIMARY=thinnest,grey -Rg -JG102/5N/$w -Da -Glightgoldenrod1 -A5000 -Bga -Wfaint -EMN+gred -Sdodgerblue -O -K -X$x0 -Y$y0 >> $ps
+#gmt pscoast -Rg -JG12/5N/$w -Da -Gbrown -A5000 -Bg -Wfaint -ECM+gbisque -O -K -X$x0 -Y$y0 >> $ps
+gmt psxy -R -J -O -K -T  -X-${x0} -Y-${y0} >> $ps
+# Add GMT logo
+gmt logo -Dx7.0/-2.7+o0.1i/0.1i+w2c -O -K >> $ps
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X1.0c -Y2.5c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.4 9.0 Digital elevation data: SRTM/GEBCO, 15 arc sec (ca. 450 m) resolution grid
+EOF
+# Convert to image file using GhostScript
+gmt psconvert Topo_MN.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+\section[\appendixname~\thesection]{GMT scripts for climate maps}
+\subsection[\appendixname~\thesubsection]{GMT script for map in Fig. \ref{fig2}: Average minimal temperature in Mongolia in 2019}\label{app2}
+
+Purpose: Climate datasets \href{https://climate.northwestknowledge.net/TERRACLIMATE/index_directDownloads.php}{TerraClimate} (here: Mongolia).
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig2}]
+#!/bin/sh 
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+# GMT set up
+gmt set FORMAT_GEO_MAP=dddF \
+    MAP_FRAME_PEN=dimgray \
+    MAP_FRAME_WIDTH=0.1c \
+    MAP_TITLE_OFFSET=1c \
+    MAP_ANNOT_OFFSET=0.1c \
+    MAP_TICK_PEN_PRIMARY=thinner,dimgray \
+    MAP_GRID_PEN_PRIMARY=thin,white \
+    MAP_GRID_PEN_SECONDARY=thinnest,white \
+    FONT_TITLE=12p,Palatino-Roman,black \
+    FONT_ANNOT_PRIMARY=7p,0,dimgray \
+    FONT_LABEL=7p,0,dimgray \
+# Overwrite defaults of GMT
+gmtdefaults -D > .gmtdefaults
+# Extract subset of file in NetCDF format
+gmt grdcut TerraClimate_tmin_2019.nc -R87.5/120/41.5/52.5 -Gmn_tmin.nc
+gdalinfo -stats mn_tmin.nc
+# Minimum=-43.000, Maximum=-16.100, Mean=-27.088, StdDev=4.858
+gmt makecpt -Cjet -T-43/-16/0.5 > pauline.cpt
+#####################################################################
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+#####################################################################
+ps=MN_tmin.ps
+# Make background transparent image
+gmt grdimage mn_tmin.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps 
+#####################################################################
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_tmin.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_tmin.nc -R -J -C2 -A2+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+#gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+#####################################################################
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    --FONT_LABEL=8p,0,black \
+    --FONT_ANNOT_PRIMARY=7p,0,black \
+    --FONT_TITLE=6p,0,black \
+    -Bg4f0.2a2+l"Colormap: 'jet' (Dark to light blue, white, yellow and red [C=RGB] -33/-4/0.5)" \
+    -I0.2 -By+lm -O -K >> $ps
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    --FORMAT_GEO_MAP=ddd:mm:ssF \
+    --MAP_GRID_PEN_PRIMARY=thinner,grey \
+    --MAP_GRID_PEN_SECONDARY=thinnest,grey \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    --MAP_TITLE_OFFSET=1.1c \
+    --FONT_ANNOT_PRIMARY=8p,0,black \
+    --FONT_LABEL=8p,25,black \
+    --FONT_TITLE=14p,25,black \
+    -B+t"Tmin (minimum temperature) in Mongolia (2019)" -O -K >> $ps 
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    --FONT_LABEL=8p,0,black \
+    --FONT_ANNOT_PRIMARY=8p,0,black \
+    --MAP_TITLE_OFFSET=0.1c \
+    --MAP_ANNOT_OFFSET=0.1c \
+    -Lx14.0c/-2.3c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+# Texts <full names of texts are given in code-1>
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,black+jLB -Gwhite@30 >> $ps << EOF
+100.90 45.80 Bayankhongor
+EOF
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+# Convert to image file using GhostScript
+gmt psconvert MN_tmin.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+\subsection[\appendixname~\thesubsection]{GMT script for map in Fig. \ref{fig3}: Average maximal temperature in Mongolia in 04.2019}\label{app3}
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig3}]
+#!/bin/sh
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+# GMT set up
+gmt set FORMAT_GEO_MAP=dddF \
+    MAP_FRAME_PEN=dimgray \
+    MAP_FRAME_WIDTH=0.1c \
+    MAP_TITLE_OFFSET=1c \
+    MAP_ANNOT_OFFSET=0.1c \
+    MAP_TICK_PEN_PRIMARY=thinner,dimgray \
+    MAP_GRID_PEN_PRIMARY=thin,white \
+    MAP_GRID_PEN_SECONDARY=thinnest,white \
+    FONT_TITLE=12p,Palatino-Roman,black \
+    FONT_ANNOT_PRIMARY=7p,0,dimgray \
+    FONT_LABEL=7p,0,dimgray \
+# Overwrite defaults of GMT
+gmtdefaults -D > .gmtdefaults
+# Extract subset of file in NetCDF format
+gmt grdcut TerraClimate_tmax_2019.nc -R87.5/120/41.5/52.5 -Gmn_tmax.nc
+gdalinfo -stats mn_tmax.nc
+# Minimum=-32.100, Maximum=1.000, Mean=-15.443, StdDev=4.977
+gmt makecpt -Cwysiwyg -T-33/1/0.5 > pauline.cpt
+#####################################################################
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+#####################################################################
+ps=MN_tmax.ps
+# Make background transparent image
+gmt grdimage mn_tmax.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps
+#####################################################################
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_tmax.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_tmax.nc -R -J -C2 -A2+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+#gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+##################################################################### 
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    --FONT_LABEL=8p,0,black \
+    --FONT_ANNOT_PRIMARY=7p,0,black \
+    --FONT_TITLE=6p,0,black \
+    -Bg4f0.2a2+l"Colormap: 'wysiwyg': 20 well-separated RGB colors [C=RGB] -33/-4/0.5)" \
+    -I0.2 -By+lm -O -K >> $ps    
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    --FORMAT_GEO_MAP=ddd:mm:ssF \
+    --MAP_GRID_PEN_PRIMARY=thinner,grey \
+    --MAP_GRID_PEN_SECONDARY=thinnest,grey \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    --MAP_TITLE_OFFSET=1.1c \
+    --FONT_ANNOT_PRIMARY=8p,0,black \
+    --FONT_LABEL=8p,25,black \
+    --FONT_TITLE=14p,25,black \
+    -B+t"Tmax (maximum temperature) in Mongolia (2019)" -O -K >> $ps 
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    --FONT_LABEL=8p,0,black \
+    --FONT_ANNOT_PRIMARY=8p,0,black \
+    --MAP_TITLE_OFFSET=0.1c \
+    --MAP_ANNOT_OFFSET=0.1c \
+    -Lx14.0c/-2.3c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+# Texts
+gmt pstext -R -J -N -O -K \
+-F+f9p,0,black+jLB -Gwhite@30 >> $ps << EOF
+103.70 48.20 Ulaanbaatar
+EOF
+gmt psxy -R -J -Ss -W0.5p -Gred -O -K << EOF >> $ps
+106.92 47.92 0.30c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,black+jLB -Gwhite@30 >> $ps << EOF
+89.15 50.10 Ulaangom
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+92.06 49.98 0.20c
+EOF
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+# Convert to image file using GhostScript
+gmt psconvert MN_tmax.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+\subsection[\appendixname~\thesubsection]{GMT script for map in Fig. \ref{fig4}: Wind speed in Mongolia in 2019}\label{app4}
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig4}]
+#!/bin/sh
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+# GMT set up
+gmt set FORMAT_GEO_MAP=dddF \
+    MAP_FRAME_PEN=dimgray \
+    MAP_FRAME_WIDTH=0.1c \
+    MAP_TITLE_OFFSET=1c \
+    MAP_ANNOT_OFFSET=0.1c \
+    MAP_TICK_PEN_PRIMARY=thinner,dimgray \
+    MAP_GRID_PEN_PRIMARY=thin,white \
+    MAP_GRID_PEN_SECONDARY=thinnest,white \
+    FONT_TITLE=12p,Palatino-Roman,black \
+    FONT_ANNOT_PRIMARY=7p,0,dimgray \
+    FONT_LABEL=7p,0,dimgray \
+# Overwrite defaults of GMT
+gmtdefaults -D > .gmtdefaults
+# Extract subset of NetCDF file 
+gmt grdcut TerraClimate_ws_2018.nc -R87.5/120/41.5/52.5 -Gmn_wind.nc
+gdalinfo -stats mn_wind.nc
+# Minimum=0.000, Maximum=4.600, Mean=2.019, StdDev=1.031
+gmt makecpt -Cplasma -T0/4.6 -Ic > pauline.cpt
+#gmt makecpt -Csky-33 -T0/4.6 -Ic > pauline.cpt
+# gmt makecpt --help
+#####################################################################
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+#####################################################################
+ps=MN_wind.ps
+# Make background transparent image
+gmt grdimage mn_wind.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps 
+#####################################################################
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_wind.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_wind.nc -R -J -C0.4 -A0.4+f7p,0,black+gwhite@60 -Wthinnest,white -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+#gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+#####################################################################   
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    -Bg1f0.1a0.5+l"Colormap 'plasma' Option D from matplotlib (-T0/4.6 [C=RGB])" \
+    -I0.2 -By+l"m/s" -O -K >> $ps   
+# Add grid
+gmt psbasemap -R -J \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    -B+t"WS (Wind Speed) in Mongolia (2019)" -O -K >> $ps 
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+# Selected texts
+gmt pstext -R -J -N -O -K \
+-F+jTL+f10p,26,black+jLB+a-315 >> $ps << EOF
+107.3 47.3 Khentii Mts
+EOF
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+# Convert to image file using GhostScript
+gmt psconvert MN_wind.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+\subsection[\appendixname~\thesubsection]{GMT script for map in Fig. \ref{fig5}: Soil moisture in Mongolia in 2019}\label{app5}
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig5}]
+#!/bin/sh
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+# Extract subset of file in NetCDF format
+gmt grdcut TerraClimate_soil_2019.nc -R87.5/120/41.5/52.5 -Gmn_soil.nc
+gdalinfo -stats mn_soil.nc
+#  Minimum=0.000, Maximum=155.000, Mean=6.393, StdDev=13.850
+#gmt makecpt -Ccool -T0/20 > pauline.cpt
+gmt makecpt -Csky-18 -T0/40 > pauline.cpt
+#####################################################################
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+#####################################################################
+ps=MN_soil.ps
+# Make background transparent image
+gmt grdimage mn_soil.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps
+#####################################################################
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_soil.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_soil.nc -R -J -C5 -A5+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+#gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+#####################################################################
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    -Bg2f0.2a2+l"Colormap 'sky-18' by Rafi, GraphicsFuel (0/40 [C=RGB])" \
+    -I0.2 -By+l"mm/m" -O -K >> $ps 
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    -B+t"Soil moisture map of Mongolia (2019)" -O -K >> $ps
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+# Selected texts
+gmt pstext -R -J -N -O -K \
+-F+jTL+f9p,26,blue2+jLB -Gwhite@60 >> $ps << EOF
+92.3 50.1 Uvs Nuur
+EOF
+gmt pstext -R -J -N -O -K \
+-F+jTL+f9p,26,blue2+jLB >> $ps << EOF
+93.3 48.1 Khyargas
+93.3 47.7 Nuur
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,red+jLB >> $ps << EOF
+103.2 46.2 Arvaikheer
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+102.77 46.26 0.20c
+EOF
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+# Convert to image file using GhostScript
+gmt psconvert MN_soil.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+\subsection[\appendixname~\thesubsection]{GMT script for map in Fig. \ref{fig6}: Downward surface shortwave radiation in Mongolia in 2019}\label{app6}
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig6}]
+#!/bin/sh
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+# Extract subset of file in NetCDF format
+gmt grdcut TerraClimate_srad_2019.nc -R87.5/120/41.5/52.5 -Gmn_srad.nc
+gdalinfo -stats mn_srad.nc
+# Minimum=40.000, Maximum=113.000, Mean=77.007, StdDev=15.877
+gmt makecpt -C22_hue_sat_value2 -T40/113 > pauline.cpt
+#####################################################################
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+#####################################################################
+ps=MN_srad.ps
+# Make background transparent image
+gmt grdimage mn_srad.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps   
+#####################################################################
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_srad.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_srad.nc -R -J -C10 -A20+f7p,0,black+gwhite@60 -Wthinner,brown -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+#####################################################################
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    -Bg10f1a10+l"Colormap '22 hue sat value2' from color tables of IDL KST Python (-T40/113 [C=RGB])" \
+    -I0.2 -By+l"Wm@+-2@+" -O -K >> $ps   
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    --FORMAT_GEO_MAP=ddd:mm:ssF \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    -B+t"Downward surface shortwave radiation (srad) in Mongolia (2019)" -O -K >> $ps 
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+# Texts
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,black+jLB -Gwhite@20 >> $ps << EOF
+99.50 45.5 Bayankhongor
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+100.72 46.19 0.20c
+EOF
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+# Convert to image file using GhostScript
+gmt psconvert MN_srad.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+\subsection[\appendixname~\thesubsection]{GMT script for map in Fig. \ref{fig7}: Snow water equivalent in Mongolia in 2019}\label{app7}
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig7}]
+#!/bin/sh
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+# Extract subset of file in NetCDF format
+gmt grdcut TerraClimate_swe_2019.nc -R87.5/120/41.5/52.5 -Gmn_swe.nc
+gdalinfo -stats mn_swe.nc
+# Minimum=0.000, Maximum=491.000, Mean=16.552, StdDev=21.985
+gmt makecpt -Cmag -T0/30 -Ic > pauline.cpt
+#####################################################################
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+#####################################################################
+ps=MN_swe.ps
+# Make background transparent image
+gmt grdimage mn_swe.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps  
+#####################################################################
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_swe.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_swe.nc -R -J -C50 -A50+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+#gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+#####################################################################
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    -Bg50f0.5a5+l"Colormap 'mag' color scheme (-T0/30 [C=RGB])" \
+    -I0.2 -By+l"mm" -O -K >> $ps   
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    --FORMAT_GEO_MAP=ddd:mm:ssF \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    -B+t"Snow Water Equivalent (SWE) at end of month in Mongolia (2019)" -O -K >> $ps
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+# Texts
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,white+jLB >> $ps << EOF
+99.50 45.5 Bayankhongor
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+100.72 46.19 0.20c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,white+jLB >> $ps << EOF
+103.2 46.2 Arvaikheer
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+102.77 46.26 0.20c
+EOF
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+# Convert to image file using GhostScript
+gmt psconvert MN_swe.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+\subsection[\appendixname~\thesubsection]{GMT script for map in Fig. \ref{fig8}: Vapor pressure deficit in Mongolia in 2019}\label{app8}
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig8}]
+#!/bin/sh
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+#####################################################################
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+#####################################################################
+# Extract subset of file in NetCDF format
+gmt grdcut TerraClimate_vpd_2018.nc -R87.5/120/41.5/52.5 -Gmn_vpd.nc
+gdalinfo -stats mn_vpd.nc
+# Minimum=0.020, Maximum=0.190, Mean=0.085, StdDev=0.027
+gmt makecpt -Csaga-22 -T-0.030/0.240 -Ic > pauline.cpt
+ps=MN_vpd.ps
+# Make background transparent image
+gmt grdimage mn_vpd.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps   
+#####################################################################
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_vpd.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_vpd.nc -R -J -C0.020 -A0.020+f7p,0,black+gwhite@60 -Wthinnest,white -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+#gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+#####################################################################  
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    -Bg0.020f0.002a0.020+l"Colormap 'saga-22' by open source GUI-driven SAGA GIS (-T-0.030/0.240 [C=RGB])" \
+    -I0.2 -By+l"kPa" -O -K >> $ps
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    --FORMAT_GEO_MAP=ddd:mm:ssF \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    -B+t"Vapor Pressure Deficit (VPD) in Mongolia (2019)" -O -K >> $ps
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+# Texts
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,black+jLB >> $ps << EOF
+112.70 47.63 Choibalsan
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+114.53 48.07 0.20c
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,black+jLB >> $ps << EOF
+91.40 48.15 Khovd
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+91.64 48.00 0.20c
+EOF
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+# Convert to image file using GhostScript
+gmt psconvert MN_vpd.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+\subsection[\appendixname~\thesubsection]{GMT script for map in Fig. \ref{fig9}: Vapor pressure anomaly in Mongolia in 2019}\label{app9}
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig9}]
+#!/bin/sh
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+# Extract subset of file in NetCDF format
+gmt grdcut TerraClimate_vap_2019.nc -R87.5/120/41.5/52.5 -Gmn_vap.nc
+gdalinfo -stats mn_vap.nc
+# Minimum=0.020, Maximum=0.190, Mean=0.085, StdDev=0.027
+gmt makecpt -Cf-33-13-10 -T0.020/0.160 > pauline.cpt
+#####################################################################
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+#####################################################################
+ps=MN_vap.ps
+# Make background transparent image
+gmt grdimage mn_vap.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps  
+#####################################################################
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_vap.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_vap.nc -R -J -C0.020 -A0.020+f7p,0,black+gwhite@60 -Wthinnest,white -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+#gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+#####################################################################
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    -Bg0.020f0.002a0.020+l"Colormap 'f-33-13-10' Gnuplot pm3d scale by P. Mikulik (-T0/4.6 [C=RGB])" \
+    -I0.2 -By+l"hPa" -O -K >> $ps
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    --FORMAT_GEO_MAP=ddd:mm:ssF \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    -B+t"VaP (Vapor Pressure) anomaly in Mongolia (2019)" -O -K >> $ps
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+# Texts
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,black+jLB >> $ps << EOF
+106.10 49.50 Darkhan
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+105.95 49.46 0.20c
+EOF
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+# Convert to image file using GhostScript
+gmt psconvert MN_vap.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+\subsection[\appendixname~\thesubsection]{GMT script for map in Fig. \ref{fig10}: Monthly precipitation in Mongolia in 2019}\label{app10}
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig10}]
+#!/bin/sh
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+# Extract subset of file in NetCDF format
+gmt grdcut TerraClimate_ppt_2019.nc -R87.5/120/41.5/52.5 -Gmn_precip.nc
+gdalinfo -statts mn_precip.nc
+# Minimum=0.000, Maximum=28.000, Mean=3.182, StdDev=2.744
+gmt makecpt -Chaxby -T0/10 > pauline.cpt
+#####################################################################
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+#####################################################################
+ps=MN_precip.ps
+# Make background transparent image
+gmt grdimage mn_precip.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps
+    
+#####################################################################
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_precip.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_precip.nc -R -J -C2 -A2+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+# gmt pscoast -R -J \
+    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps
+#####################################################################
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    -Bg1f0.1a1+l"Colormap 'haxby' Bill Haxby's color scheme (-T0/10/1 [C=RGB])" \
+    -I0.2 -By+l"mm" -O -K >> $ps  
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    -B+t"Monthly precipitation in Mongolia (2019)" -O -K >> $ps    
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+# Texts
+gmt pstext -R -J -N -O -K \
+-F+jTL+f11p,26,black+jLB+a-10 >> $ps << EOF
+96.3 47.2 Khangai Mts
+EOF
+gmt pstext -R -J -N -O -K \
+-F+f8p,0,red+jLB >> $ps << EOF
+104.25 49.0 Erdenet
+EOF
+gmt psxy -R -J -Sc -W0.5p -Gyellow -O -K << EOF >> $ps
+104.04 49.02 0.20c
+EOF
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+# Convert to image file using GhostScript
+gmt psconvert MN_precip.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+\subsection[\appendixname~\thesubsection]{GMT script for map in Fig. \ref{fig11}: Palmer Drought Severity Index (PDSI) in Mongolia in 2019}\label{app11}
+\begin{lstlisting}[language=bash, caption=GMT code used for plotting Fig. \ref{fig11}]
+#!/bin/sh
+# GMT modules: gmtset, gmtdefaults, grdcut, makecpt, grdimage, psscale, grdcontour, psbasemap, gmtlogo, psconvert
+# Extract subset of file in NetCDF format
+gmt grdcut TerraClimate_PDSI_2019.nc -R87.5/120/41.5/52.5 -Gmn_pdsi.nc
+gdalinfo -stats mn_pdsi.nc
+# Minimum=-8.100, Maximum=5.800, Mean=-0.626, StdDev=2.041
+gmt makecpt -Cturbo -T-7.0/5.0/0.1 -Ic > pauline.cpt
+# create mask of vector layer from the DCW of country's polygon
+gmt pscoast -R87.5/120/41.5/52.5 -JPoly/6.5i -Dh -M -EMN > Mongolia.txt
+ps=MN_pdsi.ps
+# Make background transparent image
+gmt grdimage mn_pdsi.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps
+# CLIPPING
+# 1. Start: clip the map by mask to only include country
+gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
+# 2. create map within mask
+# Add raster image
+gmt grdimage mn_pdsi.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> $ps
+# Add isolines
+gmt grdcontour mn_pdsi.nc -R -J -C2 -A2+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> $ps
+# Add coastlines, borders, rivers
+gmt pscoast -R -J -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
+# 3: Undo the clipping
+gmt psclip -C -O -K >> $ps    
+# Add color legend
+gmt psscale -Dg87.6/38.9+w16.5c/0.15i+h+o0.3/0i+ml+e -R -J -Cpauline.cpt \
+    -Bg2f0.1a1+l"Colormap 'turbo' Google's Improved Rainbow Colormap (-8.1/5.8/0.1 [C=RGB])" \
+    -I0.2 -By+lm -O -K >> $ps 
+# Add grid
+gmt psbasemap -R -J \
+    --MAP_FRAME_AXES=WEsN \
+    --FORMAT_GEO_MAP=ddd:mm:ssF \
+    -Bpxg10f5a5 -Bpyg10f2.5a2.5 -Bsxg5 -Bsyg5 \
+    -B+t"PDSI (Palmer Drought Severity Index) in Mongolia (2019)" -O -K >> $ps
+# Add scalebar, directional rose
+gmt psbasemap -R -J \
+    -Lx14.0c/-2.0c+c10+w1000k+l"American polyconic projection. Scale (km)"+f \
+    -UBL/0p/-60p -O -K >> $ps
+# Texts
+gmt pstext -R -J -N -O -K \
+-F+jTL+f11p,26,white+jLB+a-330  >> $ps << EOF
+105.1 42.0 G o b i  D e s e r t
+EOF
+# Add GMT logo
+gmt logo -Dx7.0/-2.8+o0.1i/0.1i+w2c -O -K >> $ps
+# Add subtitle
+gmt pstext -R0/10/0/15 -JX10/10 -X0.5c -Y2.7c -N -O \
+    -F+f10p,21,black+jLB >> $ps << EOF
+2.1 9.0 Dataset: TerraClimate. Input Data WorldClim, CRUTS4.0. Spatial resolution: 4 km (1/24\232)
+EOF
+# Convert to image file using GhostScript
+gmt psconvert MN_pdsi.ps -A0.5c -E720 -Tj -Z
+\end{lstlisting}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{adjustwidth}{-\extralength}{0cm}
+%\printendnotes[custom] % Un-comment to print a list of endnotes
+
+\reftitle{References}
+
+%=====================================
+% References, variant A: external bibliography
+%=====================================
+\bibliography{Mongolia.bib}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{adjustwidth}
+\end{document}
+
