@@ -385,7 +385,6 @@ VAP & Vapor Pressure \\
 
 }
 
-
 %\newpage
 \appendixtitles{yes} % Leave argument "no" if all appendix headings stay EMPTY (then no dot is printed after "Appendix A"). If the appendix sections contain a heading then change the argument to "yes".
 \appendixstart
@@ -435,8 +434,6 @@ gmt grdcontour mn_relief.nc -R -J -C500 -Wthinnest,darkbrown -O -K >> $ps
 # Add coastlines, borders, rivers
 gmt pscoast -R -J \
     -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
-#gmt pscoast -R -J \
-    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
 # 3: Undo the clipping
 gmt psclip -C -O -K >> $ps   
 # Add color legend
@@ -495,8 +492,7 @@ gmt pstext -R -J -N -O -K \
 -F+jTL+f10p,26,blue2+jLB+a-45 -Gwhite@60 >> $ps << EOF
 93.06 49.47 Tes
 EOF
-#
-# Mts
+# Mountains
 gmt pstext -R -J -N -O -K \
 -F+jTL+f11p,26,white+jLB+a-55  >> $ps << EOF
 89.0 48.6  A  l  t  a  i   M  t  s
@@ -581,7 +577,6 @@ EOF
 gmt psbasemap -R -J -O -K -DjBR+w2.8c+stmp >> $ps
 read x0 y0 w h < tmp
 gmt pscoast --MAP_GRID_PEN_PRIMARY=thinnest,grey -Rg -JG102/5N/$w -Da -Glightgoldenrod1 -A5000 -Bga -Wfaint -EMN+gred -Sdodgerblue -O -K -X$x0 -Y$y0 >> $ps
-#gmt pscoast -Rg -JG12/5N/$w -Da -Gbrown -A5000 -Bg -Wfaint -ECM+gbisque -O -K -X$x0 -Y$y0 >> $ps
 gmt psxy -R -J -O -K -T  -X-${x0} -Y-${y0} >> $ps
 # Add GMT logo
 gmt logo -Dx7.0/-2.7+o0.1i/0.1i+w2c -O -K >> $ps
@@ -639,8 +634,6 @@ gmt grdcontour mn_tmin.nc -R -J -C2 -A2+f7p,0,black+gwhite@60 -Wthinnest,darkbro
 # Add coastlines, borders, rivers
 gmt pscoast -R -J \
     -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
-#gmt pscoast -R -J \
-    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
 # 3: Undo the clipping
 gmt psclip -C -O -K >> $ps
 #####################################################################
@@ -730,8 +723,6 @@ gmt grdcontour mn_tmax.nc -R -J -C2 -A2+f7p,0,black+gwhite@60 -Wthinnest,darkbro
 # Add coastlines, borders, rivers
 gmt pscoast -R -J \
     -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
-#gmt pscoast -R -J \
-    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
 # 3: Undo the clipping
 gmt psclip -C -O -K >> $ps
 ##################################################################### 
@@ -833,8 +824,6 @@ gmt grdcontour mn_wind.nc -R -J -C0.4 -A0.4+f7p,0,black+gwhite@60 -Wthinnest,whi
 # Add coastlines, borders, rivers
 gmt pscoast -R -J \
     -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
-#gmt pscoast -R -J \
-    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
 # 3: Undo the clipping
 gmt psclip -C -O -K >> $ps
 #####################################################################   
@@ -875,7 +864,6 @@ gmt psconvert MN_wind.ps -A0.5c -E720 -Tj -Z
 gmt grdcut TerraClimate_soil_2019.nc -R87.5/120/41.5/52.5 -Gmn_soil.nc
 gdalinfo -stats mn_soil.nc
 #  Minimum=0.000, Maximum=155.000, Mean=6.393, StdDev=13.850
-#gmt makecpt -Ccool -T0/20 > pauline.cpt
 gmt makecpt -Csky-18 -T0/40 > pauline.cpt
 #####################################################################
 # create mask of vector layer from the DCW of country's polygon
@@ -896,8 +884,6 @@ gmt grdcontour mn_soil.nc -R -J -C5 -A5+f7p,0,black+gwhite@60 -Wthinnest,darkbro
 # Add coastlines, borders, rivers
 gmt pscoast -R -J \
     -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
-#gmt pscoast -R -J \
-    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
 # 3: Undo the clipping
 gmt psclip -C -O -K >> $ps
 #####################################################################
@@ -960,7 +946,7 @@ ps=MN_srad.ps
 gmt grdimage mn_srad.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -t100 -Xc -P -K > $ps   
 #####################################################################
 # CLIPPING
-# 1. Start: clip the map by mask to only include country
+# 1. Start: clip the map by mask to only include the country
 gmt psclip -R87.5/120/41.5/52.5 -JPoly/6.5i Mongolia.txt -O -K >> $ps
 # 2. create map within mask
 # Add raster image
@@ -1006,7 +992,6 @@ EOF
 gmt psconvert MN_srad.ps -A0.5c -E720 -Tj -Z
 \end{lstlisting}
 
-\newpage
 \subsection[\appendixname~\thesubsection]{GMT Script for Map in Figure 7: Snow Water Equivalent in Mongolia in 2019}\label{app7}
 \vspace{-3pt}\setcounter{listing}{7}
 \begin{lstlisting}[language=bash, caption=GMT code used for plotting Figure~\ref{fig7}.]
@@ -1036,8 +1021,6 @@ gmt grdcontour mn_swe.nc -R -J -C50 -A50+f7p,0,black+gwhite@60 -Wthinnest,darkbr
 # Add coastlines, borders, rivers
 gmt pscoast -R -J \
     -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
-#gmt pscoast -R -J \
-    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
 # 3: Undo the clipping
 gmt psclip -C -O -K >> $ps
 #####################################################################
@@ -1081,6 +1064,7 @@ EOF
 gmt psconvert MN_swe.ps -A0.5c -E720 -Tj -Z
 \end{lstlisting}
 
+\newpage
 \subsection[\appendixname~\thesubsection]{GMT Script for Map in Figure 8: Vapor Pressure Deficit in Mongolia in 2019}\label{app8}
 \vspace{-3pt}\setcounter{listing}{8}
 \begin{lstlisting}[language=bash, caption=GMT code used for plotting Figure~\ref{fig8}.]
