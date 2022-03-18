@@ -221,41 +221,20 @@ Similarly, the downward surface shortwave radiation (DSR) was visualised for the
 	\caption{Downward surface shortwave radiation in Mongolia in 2019. Mapping: GMT by script available in Appendix \ref{app6}. Source: author. \label{fig6}}
 \end{figure}   
 
+The Snow Water Equivalent (SWE) at end of April month in Mongolia in 2019 (Figure~\ref{fig7}) was determined by visualising the grid using the ‘grdimage’ module as follows: ‘gmt grdimage mn\_swe.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> \$ps’ as described in existing papers~\cite{Lemenkova2020l}, and adding isolines by the ‘grdcontour’ module: ‘gmt grdcontour mn\_swe.nc -R -J -C50 -A50+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> \$ps’. Furthermore, the data range was also determined by the GDAL utility ‘gdalinfo’: ‘gdalinfo -stats mn\_swe.nc’, which showed the thresholds in data used for adjusting the Colour Palette Table (cpt) based on the identified data extremities (here: up to 491). Methodologically, the SWE depicts the estimated snowpack measurement showing the amount of water contained within the snowpack over the country.
+
+The Vapor Pressure Deficit (VPD) in Mongolia (Figure~\ref{fig8}) was estimated using the difference between the calculated atmosphere moisture and the air capacity to contain the moisture if saturated. As such, it utilised the information on the greenhouse air temperature, relative humidity and canopy air temperature. The VPD has correlations with crop transpiration and climate factors, such as warming, water shortage and drying of atmosphere~\cite{Ghanem,Lietal2021,Song}. 
+
+The Vapor Pressure (VAP) in Mongolia shown in Figure~\ref{fig9} is represented using the advanced computation approach based on the equation computing VAP as the pressure from a vapor in thermodynamic equilibrium with solid or liquid phases. Since VAP is the atmospheric pressure exerted by water vapor, it is a method of measuring the humidity of the air and may indicate environmental setting in the country suitable or unsuitable for crop planting and agricultural activities. The visualisation of VAP map has been performed using the colourmap ‘f-33-13-10' by the Gnuplot pm3d CPT which was developed as a scale by P. Mikulík (data range here is from 0 to 4.6 for an RGB CPT). 
+
 \vspace{-12pt}
 \begin{figure}[H]%\centering
 	\includegraphics[width=13.50 cm]{Fig_07.jpg}
 	\caption{\textls[-25]{Snow water equivalent in Mongolia in 2019. Mapping: GMT by script available in Appendix~\ref{app7}}. Source: author. \label{fig7}}
 \end{figure}  
 
-The Snow Water Equivalent (SWE) at end of month in Mongolia in 2019 (Figure~\ref{fig7}) was determined by visualising the grid using the ‘grdimage’ module as follows: ‘gmt grdimage mn\_swe.nc -Cpauline.cpt -R87.5/120/41.5/52.5 -JPoly/6.5i -I+a15+ne0.75 -Xc -P -O -K >> \$ps’ as described in existing papers~\cite{Lemenkova2020l}, and adding isolines by the ‘grdcontour’ module: ‘gmt grdcontour mn\_swe.nc -R -J -C50 -A50+f7p,0,black+gwhite@60 -Wthinnest,darkbrown -O -K >> \$ps’. Furthermore, the data range was also determined by the GDAL utility ‘gdalinfo’: ‘gdalinfo -stats mn\_swe.nc’, which showed the thresholds in data used for adjusting the Colour Palette Table (cpt) based on the identified data extremities (here: up to 491). Methodologically, the SWE depicts the estimated snowpack measurement showing the amount of water contained within the snowpack over the country.
-
-\vspace{-12pt}
-\begin{figure}[H]%\centering
-	\includegraphics[width=13.50 cm]{Fig_08.jpg}
-	\caption{\textls[-25]{Vapor pressure deficit in Mongolia in 2019. Mapping: GMT by script available in Appendix~\ref{app8}}. Source: author. \label{fig8}}
-\end{figure}   
-
-The Vapor Pressure Deficit (VPD) in Mongolia (Figure~\ref{fig8}) was estimated using the difference between the calculated atmosphere moisture and the air capacity to contain the moisture if saturated. As such, it utilised the information on the greenhouse air temperature, relative humidity and canopy air temperature. The VPD has correlations with crop transpiration and climate factors, such as warming, water shortage and drying of atmosphere~\cite{Ghanem,Lietal2021,Song}. 
-
-The Vapor Pressure (VAP) in Mongolia shown in Figure~\ref{fig9} is represented using the advanced computation approach based on the equation computing VAP as the pressure from a vapor in thermodynamic equilibrium with solid or liquid phases. Since VAP is the atmospheric pressure exerted by water vapor, it is a method of measuring the humidity of the air and may indicate environmental setting in the country suitable or unsuitable for crop planting and agricultural activities. The visualisation of VAP map has been performed using the colourmap ‘f-33-13-10' by the Gnuplot pm3d CPT which was developed as a scale by P. Mikulík (data range here is from 0 to 4.6 for an RGB CPT). 
-
 The precipitation map (Figure~\ref{fig10}) accounts for a monthly data from the TerraClimate as of 2019 tabulated in NetCDF format and plotted using similar GMT techniques. The grid annotations were defined using the flag ‘FORMAT\_GEO\_MAP=ddd:mm:ssF' which controls general map formatting in the ‘psbasemap’ module of GMT. The Palmer Drought Severity Index (PDSI) is visualised in Figure~\ref{fig11} as a function of temperature and precipitation. The PDSI is nowadays a widely accepted in climatology index originally developed by the American meteorologist Wayne Palmer~\cite{Palmer1965}. It demonstrates a simplified soil water balance estimating relative soil moisture conditions. Although normally it differs from $-$10 (very dry) to +10 (extreme wet), the actual data may vary regionally. Thus, for the case of Mongolia in 2019, the PDSI data ranged from minimum = $-$8.100 to maximum = 5.800, with mean = $-$0.626 and SD = 2.041, according to the data inspection by GDAL (gdlainfo). 
 
-\begin{figure}[H]%\centering
-	\includegraphics[width=14.0 cm]{Fig_09.jpg}
-	\caption{{Vapor pressure anomaly in Mongolia in 2019. Mapping: GMT by script available in Appendix \ref{app9}}. Source: author. \label{fig9}}
-\end{figure}   
-
-\vspace{-12pt}
-\begin{figure}[H]%\centering
-	\includegraphics[width=14.0 cm]{Fig_10.jpg}
-	\caption{\textls[-25]{Monthly precipitation in Mongolia in 2019. Mapping: GMT by script available in Appendix~\ref{app10}}. Source: author. \label{fig10}}
-\end{figure}   
-
-\begin{figure}[H]%\centering
-	\includegraphics[width=14.0 cm]{Fig_11.jpg}
-	\caption{Palmer Drought Severity Index (PDSI) in Mongolia in 2019. Mapping: GMT by script available in Appendix \ref{app11}. Source: author. \label{fig11}}
-\end{figure}   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
 
@@ -263,17 +242,43 @@ Climate input datasets from the TerraClimate have been visualised using the meth
 
 The topographic map of Mongolia (sourced from~\cite{GEBCO}) was visualised for the clipped region of the country using ‘wiki-schwarzwald-d050 cpt’. The GEBCO is widely used due to the unprecedentedly high resolution, reliability and precision~\cite{Liuetal2019,Nock,Lemenkova2020m,Saito}. The inspected data range shows the highest point at Khüiten Peak (4374 m) in the SW of the country on the border with China in the Altai Range, the topographic mean is 1319.129 m, SD is 571.535 m, according to GDAL. 
 
-The minimal temperatures in Mongolia for the April 2019 (Figure~\ref{fig2}) were identified as minimum~=~$-$43.0~°C, maximum~=~$-$16.1~°C, mean~=~$-$27.088~°C, StdDev~=~4.858~°C based on the TerraClimate data. The coldest region is noted as the surroundings of the Uus Nuur and Tes River in the NW of the country. The maximal temperatures for April 2019 (Figure~\ref{fig3}) demonstrated the following results: minimum~=~$-$32.1~°C, maximum~=~1.0~°C, mean~=~$-$15.443~°C, StdDev~=~4.977 ~°C. The data range for the wind speed (Figure~\ref{fig4}) show the following results: minimum~=~0.0 m/s, maximum~=~4.6~m/s, Mean~=~2.019~m/s, StdDev~=~1.031 m/s. The wind demonstrates the highest values in the Gobi Desert region in the SE and the eastern region of the country (Choibalsan region), which well corresponds with the levelled topography of these regions. In contrast, the lowest values of the wind speed are notable in the NW of the country around the cities Khovd, \"Olgii and Ulaangom, as well as in the Altai Mountains.
+The minimal temperatures in Mongolia for the April 2019 (Figure~\ref{fig2}) were identified as minimum~=~$-$43.0~°C, maximum~=~$-$16.1~°C, mean~=~$-$27.088~°C, StdDev~=~4.858~°C based on the TerraClimate data. The coldest region is noted as the surroundings of the Uus Nuur and Tes River in the NW of the country. The maximal temperatures for April 2019 (Figure~\ref{fig3}) demonstrated the following results: minimum~=~$-$32.1~°C, maximum~=~1.0~°C, mean~=~$-$15.443~°C, StdDev~=~4.977 ~°C. The data range for the wind speed (Figure~\ref{fig4}) show the following results: minimum~=~0.0 m/s, maximum~=~4.6~m/s, Mean~=~2.019~m/s, StdDev~=~1.031 m/s. 
 
-Regarding the soil moisture (Figure~\ref{fig5}), the volumetric water content in the soils of Mongolia have the following data range: from 0 to the maximum values at $155.0$ $\text{cm}^3/\text{cm}^3$, with mean at $6.393$ $\text{cm}^3/\text{cm}^3$ and SD at $13.850$ $\text{cm}^3/\text{cm}^3$. The highest values are notable in the northern regions of the country around the cities Mörön, Erdenet, Ulaanbaatar, as well as in central regions around Bayankhongor and Arvaikheer. The notably high values of the soil moisture clearly correspond to the river valleys and lakes (Selenge, Khövsgöl, Kherlen, Onon) while the lowest values close to zero are visible in the southern region of the Gobi Desert. 
+\vspace{-12pt}
+\begin{figure}[H]%\centering
+	\includegraphics[width=13.50 cm]{Fig_08.jpg}
+	\caption{\textls[-25]{Vapor pressure deficit in Mongolia in 2019. Mapping: GMT by script available in Appendix~\ref{app8}}. Source: author. \label{fig8}}
+\end{figure}   
+
+\begin{figure}[H]%\centering
+	\includegraphics[width=14.0 cm]{Fig_09.jpg}
+	\caption{{Vapor pressure anomaly in Mongolia in 2019. Mapping: GMT by script available in Appendix \ref{app9}}. Source: author. \label{fig9}}
+\end{figure}   
+
+The wind demonstrates the highest values in the Gobi Desert region in the south-eastern and the eastern regions of the country (Choibalsan region), which well corresponds with the levelled topography of these regions. In contrast, the lowest values of the wind speed are notable in the north-west of the country around the cities Khovd, \"Olgii and Ulaangom, as well as in the Altai Mountains.
+
+Regarding the soil moisture (Figure~\ref{fig5}), the volumetric water content in the soils of Mongolia have the following data range: from 0 to the maximum values at $155.0$ $\text{cm}^3/\text{cm}^3$, with mean at $6.393$ $\text{cm}^3/\text{cm}^3$ and SD at $13.850$ $\text{cm}^3/\text{cm}^3$. The highest values are notable in the northern regions of the country around the cities Mörön, Erdenet, Ulaanbaatar, as well as in central regions around Bayankhongor and Arvaikheer. The notably high values of the soil moisture clearly correspond to the river valleys and lakes (Selenge, Khövsgöl, Kherlen, Onon) while the lowest values close to zero are visible in the south of Gobi Desert. 
+
+\vspace{-12pt}
+\begin{figure}[H]%\centering
+	\includegraphics[width=14.0 cm]{Fig_10.jpg}
+	\caption{\textls[-25]{Monthly precipitation in Mongolia in 2019. Mapping: GMT by script available in Appendix~\ref{app10}}. Source: author. \label{fig10}}
+\end{figure}  
 
 The inspection of the results on downward surface shortwave radiation (DSRAD) in Mongolia in 2019 (Figure~\ref{fig6}) shows the following outputs: the statistical data range is from minimum~=~$40.0$ $\text{Wm}^{-2}$ to a maximum~=~$113.0$ $\text{Wm}^{-2}$, mean~=~$77.007$ $\text{Wm}^{-2}$, StdDev~=~$15.877$ $\text{Wm}^{-2}$. The general trend in the data distribution demonstrates a clearly NS direction with highest values corresponding the southern regions (Gobi Desert and surroundings) while the lowest values are in the north of the country (Khövsgöl, Selenga River valley and its tributaries, Onon River, Uvs Nuur).
 
-The Snow Water Equivalent (SWE) shown in Figure~\ref{fig7} demonstrated the statistical analysis as follows: data varies from the minimum~=~0 to the maximum~=~491.0 mm, mean~=~16.552 mm, SD~=~21.985 mm. Variation of the data shows a correlation with the topography of the region with increased values in the regions of the Khangai Mts, Altai Mts and in the north. In contrast, the lowest values are notable in the southern and SE regions of Mongolia. The Vapor Pressure Deficit (VPD) in the country is shown in Figure~\ref{fig8}. For the VPD, the southern regions of the country ranked as a ‘very high’ level of deficit with values of 0.16 to 0.18 (coloured cyan to blue in Figure~\ref{fig9}), while northern and selected central regions (Uvs Nuur, Ulaangom) are identified as the ‘low’ level (values $-$0.02 to 0.02, coloured red in Figure~\ref{fig9}). 
+The Snow Water Equivalent (SWE) shown in Figure~\ref{fig7} demonstrated the statistical analysis as follows: data varies from the minimum~=~0 to the maximum~=~491.0 mm, mean~=~16.552 mm, SD~=~21.985 mm. Variation of the data shows a correlation with the topography of the region with increased values in the regions of the Khangai Mts, Altai Mts and in the north. In contrast, the lowest values are notable in the southern and SE regions of Mongolia. The Vapor Pressure Deficit (VPD) in the country is shown in Figure~\ref{fig8}. For the VPD, the southern regions of the country ranked as a ‘very high’ level of deficit with values of 0.16 to 0.18 (coloured cyan to blue in Figure~\ref{fig9}), while northern and selected central regions (Uvs Nuur, Ulaangom) are identified as the ‘low’ level (values $-$0.02 to 0.02, coloured red in Figure~\ref{fig9}).  
 
 The rest of the country has values varied according to the topography and local climate settings. For example, the Vapor Pressure (VAP) anomaly over Mongolia shows a clearly visible negative values in the northernmost areas of the country around the Tsetserleg city (Figure~\ref{fig9}). General data range shows the following values: Minimum~=~0.020 hPa, Maximum~=~0.190 hPa, Mean~=~0.085 hPa, StdDev~=~0.027 hPa, where variations in values demonstrate a general trend of increase towards the southern regions of Mongolia. 
 
-Monthly precipitation in Mongolia in 2019 (Figure~\ref{fig10}) was identified as at high levels in central regions with a general data range from minimum~=~0.0 to a maximum of 28.0 mm, a mean at 3.182 mm, and a standard deviation (StdDev) at 2.744 mm. The map was visualised using ‘saga-22’ cpt adopted from the SAGA open source GIS. Finally, the Palmer Drought Severity Index (PDSI) in Mongolia calculated and visualised for 2019 shows the following data range: general data range from $-$7 to +5 from very dry levels to the extreme wet values showing very dry values in the Gobi Desert while more wet and moist regions in the mountain ranges of the Altai and forests. 
+\begin{figure}[H]%\centering
+	\includegraphics[width=14.0 cm]{Fig_11.jpg}
+	\caption{Palmer Drought Severity Index (PDSI) in Mongolia in 2019. Mapping: GMT by script available in Appendix \ref{app11}. Source: author. \label{fig11}}
+\end{figure}   
+
+Monthly precipitation in Mongolia in 2019 (Figure~\ref{fig10}) was identified as at high levels in central regions with a general data range from minimum~=~0.0 to a maximum of 28.0 mm, a mean at 3.182 mm, and a standard deviation (StdDev) at 2.744 mm. The map was visualised using ‘saga-22’ cpt adopted from the SAGA open source GIS. 
+
+Finally, the Palmer Drought Severity Index (PDSI) in Mongolia (Figure~\ref{fig11}) calculated and visualised for 2019 shows the following data range: in general, data varies from $-$7 to +5 from very dry levels to the extreme wet values showing very dry values in the Gobi Desert while more wet and moist regions in the mountain ranges of the Altai and forests. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
