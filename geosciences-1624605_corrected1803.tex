@@ -1094,8 +1094,6 @@ gmt grdcontour mn_vpd.nc -R -J -C0.020 -A0.020+f7p,0,black+gwhite@60 -Wthinnest,
 # Add coastlines, borders, rivers
 gmt pscoast -R -J \
     -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
-#gmt pscoast -R -J \
-    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
 # 3: Undo the clipping
 gmt psclip -C -O -K >> $ps
 #####################################################################  
@@ -1168,8 +1166,6 @@ gmt grdcontour mn_vap.nc -R -J -C0.020 -A0.020+f7p,0,black+gwhite@60 -Wthinnest,
 # Add coastlines, borders, rivers
 gmt pscoast -R -J \
     -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
-#gmt pscoast -R -J \
-    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
 # 3: Undo the clipping
 gmt psclip -C -O -K >> $ps
 #####################################################################
@@ -1236,8 +1232,6 @@ gmt grdcontour mn_precip.nc -R -J -C2 -A2+f7p,0,black+gwhite@60 -Wthinnest,darkb
 # Add coastlines, borders, rivers
 gmt pscoast -R -J \
     -Ia/thinner,blue -Na -N1/thicker,tomato -W0.1p -Df -O -K >> $ps
-# gmt pscoast -R -J \
-    -Ia/thinner,blue -Na -W0.1p -Df -O -K >> $ps
 # 3: Undo the clipping
 gmt psclip -C -O -K >> $ps
 #####################################################################
